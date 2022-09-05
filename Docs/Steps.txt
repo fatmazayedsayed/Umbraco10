@@ -1,0 +1,26 @@
+1-update visual studion to latest verion (or install .net 6.0.5) and it will work like a charm
+2-run umbraco backoffice ->adjust your db
+3-in appsesstings adjust come configurations in Umbraco section
+ "Umbraco": {
+    "CMS": {
+      "Runtime": { "Mode": "Development" },
+      "ModelsBuilder": {
+        "ModelsMode": "SourceCodeManual" //change from SourceCodeAuto
+      }}
+4-in settings create document type -> type folder (pages/components/compositions/elements/folder)
+5-under pages folder->create document with templete called home page
+Note:
+difference between 
+  "ModelsMode": "SourceCodeManual" ->need to build 
+   "ModelsMode": "SourceCodeAuto"->in each save site will restart and run automatically
+--------------------
+6-composition->header with title
+                ->add header component in home page
+                ->add repetable type
+                ->add image
+                ->toggel show/hide image
+                ->body color dropdown
+7-home page->make it as root
+8-in content section add home page
+9-in settings->templete->edit home templete->add header properities to display it
+

@@ -1,0 +1,38 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.HomePage>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+	Layout = null;
+}
+<html>
+	<head>
+<style>
+	body{
+		color:@Model.Header_Color 
+	}
+</style>
+	</head>
+	<body>
+	
+<h1>@Model.Name</h1>
+<h1>@Model.Header_title</h1>
+
+@{
+	if (Model.Header_Names != null && Model.Header_Names.Any())
+	{
+		<ul>
+						@foreach (var item in Model.Header_Names)
+			{
+							<li>@item</li>
+			}
+		</ul>
+	}
+	if (!Model.Header_HideImage && Model.Header_Image != null)
+	{
+		<img style="width:300px;height:auto;" src="@Model.Header_Image.Url()" alt="flower" />
+	}
+	
+		<div>@Model.Header_Body</div>
+}
+</body>
+</html>
