@@ -22,29 +22,15 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 	/// <summary>Header Properties</summary>
 	public partial interface IHeaderProperties : IPublishedElement
 	{
-		/// <summary>Header_Body</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		global::Umbraco.Cms.Core.Strings.IHtmlEncodedString Header_Body { get; }
-
-		/// <summary>Header_Color</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		string Header_Color { get; }
-
-		/// <summary>Header_HideImage</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
-		bool Header_HideImage { get; }
-
 		/// <summary>Header_Image</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
 		global::Umbraco.Cms.Core.Models.MediaWithCrops Header_Image { get; }
 
-		/// <summary>Header_Names</summary>
+		/// <summary>Header_SubTitle</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		global::System.Collections.Generic.IEnumerable<string> Header_Names { get; }
+		string Header_SubTitle { get; }
 
 		/// <summary>Title</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
@@ -84,43 +70,6 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		// properties
 
 		///<summary>
-		/// Header_Body
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("header_Body")]
-		public virtual global::Umbraco.Cms.Core.Strings.IHtmlEncodedString Header_Body => GetHeader_Body(this, _publishedValueFallback);
-
-		/// <summary>Static getter for Header_Body</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
-		[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		public static global::Umbraco.Cms.Core.Strings.IHtmlEncodedString GetHeader_Body(IHeaderProperties that, IPublishedValueFallback publishedValueFallback) => that.Value<global::Umbraco.Cms.Core.Strings.IHtmlEncodedString>(publishedValueFallback, "header_Body");
-
-		///<summary>
-		/// Header_Color
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("header_Color")]
-		public virtual string Header_Color => GetHeader_Color(this, _publishedValueFallback);
-
-		/// <summary>Static getter for Header_Color</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
-		[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		public static string GetHeader_Color(IHeaderProperties that, IPublishedValueFallback publishedValueFallback) => that.Value<string>(publishedValueFallback, "header_Color");
-
-		///<summary>
-		/// Header_HideImage: Do you want to hide the image
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
-		[ImplementPropertyType("header_HideImage")]
-		public virtual bool Header_HideImage => GetHeader_HideImage(this, _publishedValueFallback);
-
-		/// <summary>Static getter for Header_HideImage</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
-		public static bool GetHeader_HideImage(IHeaderProperties that, IPublishedValueFallback publishedValueFallback) => that.Value<bool>(publishedValueFallback, "header_HideImage");
-
-		///<summary>
 		/// Header_Image
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
@@ -134,17 +83,17 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		public static global::Umbraco.Cms.Core.Models.MediaWithCrops GetHeader_Image(IHeaderProperties that, IPublishedValueFallback publishedValueFallback) => that.Value<global::Umbraco.Cms.Core.Models.MediaWithCrops>(publishedValueFallback, "header_Image");
 
 		///<summary>
-		/// Header_Names
+		/// Header_SubTitle
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("header_Names")]
-		public virtual global::System.Collections.Generic.IEnumerable<string> Header_Names => GetHeader_Names(this, _publishedValueFallback);
+		[ImplementPropertyType("header_SubTitle")]
+		public virtual string Header_SubTitle => GetHeader_SubTitle(this, _publishedValueFallback);
 
-		/// <summary>Static getter for Header_Names</summary>
+		/// <summary>Static getter for Header_SubTitle</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
 		[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		public static global::System.Collections.Generic.IEnumerable<string> GetHeader_Names(IHeaderProperties that, IPublishedValueFallback publishedValueFallback) => that.Value<global::System.Collections.Generic.IEnumerable<string>>(publishedValueFallback, "header_Names");
+		public static string GetHeader_SubTitle(IHeaderProperties that, IPublishedValueFallback publishedValueFallback) => that.Value<string>(publishedValueFallback, "header_SubTitle");
 
 		///<summary>
 		/// Title: Enter Header for the page

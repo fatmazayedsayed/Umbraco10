@@ -1,3 +1,4 @@
+https://www.youtube.com/watch?v=j7RyoF_LuL0&ab_channel=PaulSeal
 1-update visual studion to latest verion (or install .net 6.0.5) and it will work like a charm
 2-run umbraco backoffice ->adjust your db
 3-in appsesstings adjust come configurations in Umbraco section
@@ -23,4 +24,17 @@ difference between
 7-home page->make it as root
 8-in content section add home page
 9-in settings->templete->edit home templete->add header properities to display it
+--------------------------------------------------------------------------------
+https://www.youtube.com/watch?v=v_H6sa63-dU&ab_channel=PaulSeal
+1- download templete https://startbootstrap.com/theme/clean-blog
+2-copy design folders in wwwRoot
+3-copy html from templete into home page
+ 
+5-composition->Edit header with 
+                ->title
+                ->Sub title
+                ->add image
+6-Edit home page content
+------------------------------------------------------
+https://www.youtube.com/watch?v=d9wBhlLKmvI&ab_channel=PaulSeal
 
