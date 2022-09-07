@@ -37,4 +37,16 @@ https://www.youtube.com/watch?v=v_H6sa63-dU&ab_channel=PaulSeal
 6-Edit home page content
 ------------------------------------------------------
 https://www.youtube.com/watch?v=d9wBhlLKmvI&ab_channel=PaulSeal
+1-in partial view create tempelet then make home inherts from it
+2-add home design into master page
+3-create partial view for header content  
+            ->add meta data section
+            ->call partial inside Master
+4-repeate for navigation / footer/header
+5-create 
+        content composition
+        content page (composition with header+content)
+        add content page to home page childs 
+        make contet inherts from master
+6-in master make css and js start with / to make them read form the root
 
