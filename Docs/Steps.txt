@@ -96,3 +96,4 @@ dotnet add package Our.Umbraco.Community.Contentment
 3-create compoistion for new data type->select new type
 4-add in home page
 5-edit footer partial view
+6-use dictionary in footer
