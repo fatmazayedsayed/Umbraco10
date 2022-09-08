@@ -85,9 +85,8 @@ install usync
 4-install using PMC
 5-build project go to settings section and run USync to export your data
 6-go to project folder to see USync folder generated
-
-
-
+7-try to create empty project and use USync
 ------------------------------------------------------
-
+How to build a website with Umbraco 10 - Part 8 - Footer Icons and Dictionary
+https://www.youtube.com/watch?v=zIDLaeCgfOY&ab_channel=PaulSeal
 
