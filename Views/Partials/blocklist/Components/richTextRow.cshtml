@@ -1,6 +1,8 @@
 @inherits UmbracoViewPage<BlockListItem>
 @{
-	var row = (RichTextRow)Model.Content;
+    var row = (RichTextRow)Model.Content;
+    var rowSettings = (RichTextRowSettings)Model.Settings;
+    if (rowSettings?.Hide ?? false) return;
 }
 <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
