@@ -90,3 +90,9 @@ install usync
 How to build a website with Umbraco 10 - Part 8 - Footer Icons and Dictionary
 https://www.youtube.com/watch?v=zIDLaeCgfOY&ab_channel=PaulSeal
 
+1-use contentment to use icons
+dotnet add package Our.Umbraco.Community.Contentment
+2-create data type for soical icons->select soical links
+3-create compoistion for new data type->select new type
+4-add in home page
+5-edit footer partial view
