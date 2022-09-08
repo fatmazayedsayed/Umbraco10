@@ -49,4 +49,23 @@ https://www.youtube.com/watch?v=d9wBhlLKmvI&ab_channel=PaulSeal
         add content page to home page childs 
         make contet inherts from master
 6-in master make css and js start with / to make them read form the root
+------------------------------------------------------
+https://www.youtube.com/watch?v=1kPyds7Z8Go&ab_channel=PaulSeal
+1-create 
+        ->article list
+        ->contact page
+        ->visibility properties composition
+                        ->add it inside(contact/content/article list)
+        ->add site navagation with multi URL picker 
+            ->add it to home page 
+
+
+------------------------------------------------------
+
+
+------------------------------------------------------
+
+
+------------------------------------------------------
+
 

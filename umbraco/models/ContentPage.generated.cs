@@ -18,9 +18,9 @@ using Umbraco.Extensions;
 
 namespace Umbraco.Cms.Web.Common.PublishedModels
 {
-	/// <summary>Content Page</summary>
+	/// <summary>Content</summary>
 	[PublishedModel("contentPage")]
-	public partial class ContentPage : PublishedContentModel, IContentProperties, IHeaderProperties
+	public partial class ContentPage : PublishedContentModel, IContentProperties, IHeaderProperties, IVisibilityProperties
 	{
 		// helpers
 #pragma warning disable 0109 // new is redundant
@@ -80,5 +80,12 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
 		[ImplementPropertyType("header_title")]
 		public virtual string Header_title => global::Umbraco.Cms.Web.Common.PublishedModels.HeaderProperties.GetHeader_title(this, _publishedValueFallback);
+
+		///<summary>
+		/// visibility Hide: set this to true if you want to hide page from main menu
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
+		[ImplementPropertyType("visibility_Hide")]
+		public virtual bool Visibility_Hide => global::Umbraco.Cms.Web.Common.PublishedModels.VisibilityProperties.GetVisibility_Hide(this, _publishedValueFallback);
 	}
 }
