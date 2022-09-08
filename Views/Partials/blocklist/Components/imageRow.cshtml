@@ -1,0 +1,21 @@
+﻿@inherits UmbracoViewPage<BlockListItem>
+@{
+    var row = (ImageRow)Model.Content;
+    if (row.ImageRow_Image == null) return;
+}
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+        @if(row.ImageRow_Link!=null)
+        {
+            @:<a href="@row.ImageRow_Link.Url" target="@row.ImageRow_Link.Target" title="@row.ImageRow_Link.Name">
+        }
+            <img class="img-fluid" src="@row.ImageRow_Image.Url()"  alt="@row.ImageRow_Caption" />
+            <span class="caption text-muted">@row.ImageRow_Caption</span>
+            @if (row.ImageRow_Link != null)
+            {
+                @:</a>
+            }
+        </div>
+    </div>
+</div>
