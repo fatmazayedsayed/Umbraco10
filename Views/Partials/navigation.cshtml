@@ -1,7 +1,7 @@
 ﻿@inherits UmbracoViewPage
 @{
 	var homePage = Umbraco.AssignedContentItem.AncestorOrSelf<HomePage>();
-	var childeren = homePage.Nav_url;
+	var navigationItems = homePage.Site_Nav_NavElement;
 }
 <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
 	<div class="container px-4 px-lg-5">
@@ -13,13 +13,38 @@
 		<div class="collapse navbar-collapse" id="navbarResponsive">
 
 			<ul class="navbar-nav ms-auto py-4 py-lg-0">
- 				@{
-					if (childeren != null && childeren.Any())
+				@{
+					if (navigationItems != null && navigationItems.Any())
 					{
-						foreach (var item in childeren)
+						var dropdownId = 0;
+						foreach (var item in navigationItems)
 						{
-							<li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" target="@item.Target" href="@item.Url">@item.Name</a></li>
+							var hasChildren = (item.NavElement_ChildLinks != null && item.NavElement_ChildLinks.Any());
+							if (hasChildren)
+							{
+								<li class="nav-item dropdown">
+									<a class="nav-link px-lg-3 py-3 py-lg-4 dropdown-toggle" href="https://google.com" id="navbarDropdown@(dropdownId)" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+										@item.NavElement_Title
+									</a>
+									<ul class="dropdown-menu border-0" aria-labelledby="navbarDropdown@(dropdownId)">
+										@foreach (var childLink in item.NavElement_ChildLinks)
+										{
+											<li><a class="dropdown-item" href="@childLink.Url" target="@childLink.Target">@childLink.Name</a></li>
+										}
+									</ul>
+								</li>
+							}
+							else
+							{
+								<li class="nav-item">
+									<a class="nav-link px-lg-3 py-3 py-lg-4"
+					   	target="@item.NavElement_Link.Target" href="@item.NavElement_Link.Url">@item.NavElement_Title</a>
+								</li>
+							}
+							dropdownId++;
 						}
+
+
 					}
 				}
 			</ul>

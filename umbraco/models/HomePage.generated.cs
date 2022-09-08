@@ -74,11 +74,11 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		public virtual string Header_title => global::Umbraco.Cms.Web.Common.PublishedModels.HeaderProperties.GetHeader_title(this, _publishedValueFallback);
 
 		///<summary>
-		/// nav_url
+		/// site_Nav_NavElement
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("nav_url")]
-		public virtual global::System.Collections.Generic.IEnumerable<global::Umbraco.Cms.Core.Models.Link> Nav_url => global::Umbraco.Cms.Web.Common.PublishedModels.SiteNavigationProperities.GetNav_url(this, _publishedValueFallback);
+		[ImplementPropertyType("site_Nav_NavElement")]
+		public virtual global::System.Collections.Generic.IEnumerable<global::Umbraco.Cms.Web.Common.PublishedModels.NavigationItem> Site_Nav_NavElement => global::Umbraco.Cms.Web.Common.PublishedModels.SiteNavigationProperities.GetSite_Nav_NavElement(this, _publishedValueFallback);
 	}
 }

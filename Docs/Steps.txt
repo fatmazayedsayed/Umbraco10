@@ -1,3 +1,4 @@
+How to build a website with Umbraco 10 - Part 2 - C# Models and Razor
 https://www.youtube.com/watch?v=j7RyoF_LuL0&ab_channel=PaulSeal
 1-update visual studion to latest verion (or install .net 6.0.5) and it will work like a charm
 2-run umbraco backoffice ->adjust your db
@@ -25,6 +26,7 @@ difference between
 8-in content section add home page
 9-in settings->templete->edit home templete->add header properities to display it
 --------------------------------------------------------------------------------
+How to build a website with Umbraco 10 - Part 3 - Integrating your HTML
 https://www.youtube.com/watch?v=v_H6sa63-dU&ab_channel=PaulSeal
 1- download templete https://startbootstrap.com/theme/clean-blog
 2-copy design folders in wwwRoot
@@ -36,6 +38,7 @@ https://www.youtube.com/watch?v=v_H6sa63-dU&ab_channel=PaulSeal
                 ->add image
 6-Edit home page content
 ------------------------------------------------------
+How to build a website with Umbraco 10 - Part 4 - Slicing the Templates
 https://www.youtube.com/watch?v=d9wBhlLKmvI&ab_channel=PaulSeal
 1-in partial view create tempelet then make home inherts from it
 2-add home design into master page
@@ -50,6 +53,7 @@ https://www.youtube.com/watch?v=d9wBhlLKmvI&ab_channel=PaulSeal
         make contet inherts from master
 6-in master make css and js start with / to make them read form the root
 ------------------------------------------------------
+How to build a website with Umbraco 10 - Part 5 - Main Navigation
 https://www.youtube.com/watch?v=1kPyds7Z8Go&ab_channel=PaulSeal
 1-create 
         ->article list
@@ -59,8 +63,17 @@ https://www.youtube.com/watch?v=1kPyds7Z8Go&ab_channel=PaulSeal
         ->add site navagation with multi URL picker 
             ->add it to home page 
 
-
 ------------------------------------------------------
+How to build a website with Umbraco 10 - Part 6 - Nested Content Nav
+https://www.youtube.com/watch?v=TBanL1diBFk&ab_channel=PaulSeal
+*create nested navagation dropDown
+1-in element foder->create Nested Content Folder
+2-create navigation item of type element (title/single url/multi url)you have add them inside grouo
+3-create data type of type nexted content and select your previous item
+4-go to home page type->site navigation->change to the new type NavElement
+5-updte home page content
+6-edit navigation partial view
+
 
 
 ------------------------------------------------------
