@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="6.0.5" />
     <PackageReference Include="Umbraco.Cms" Version="10.1.0" />
+    <PackageReference Include="uSync" Version="10.1.0" />
   </ItemGroup>
 
   <ItemGroup>
