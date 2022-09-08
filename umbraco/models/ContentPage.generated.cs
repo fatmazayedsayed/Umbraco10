@@ -58,6 +58,14 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		public virtual global::Umbraco.Cms.Core.Strings.IHtmlEncodedString Content_Body => global::Umbraco.Cms.Web.Common.PublishedModels.ContentProperties.GetContent_Body(this, _publishedValueFallback);
 
 		///<summary>
+		/// content_Main
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("content_Main")]
+		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockListModel Content_Main => global::Umbraco.Cms.Web.Common.PublishedModels.ContentProperties.GetContent_Main(this, _publishedValueFallback);
+
+		///<summary>
 		/// Header_Image
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "10.1.0+3972538")]

@@ -3,11 +3,9 @@
 @using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
 @{
 	Layout = "Master.cshtml";
-}
-<div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-            @Model.Content_Body
-        </div>
-    </div>
+} 
+<div class="mb-4">
+    <div class="container px-4 px-lg-5">
+        @Html.GetBlockListHtml(Model.Content_Main)        
+</div>
 </div>
