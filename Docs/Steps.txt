@@ -117,8 +117,11 @@ How to build a website with Umbraco 10 - Part 9 - Block List Editor
 6-create folder in composition->Content Blocks/Content settings/Content Models ->add hide toggle
 7-add them in settings models as a composition  
 8-edit block list data type->edit the settings  model 
-8-
+9-to display hidden properity add {{ 'Image Row'+$index}} {{$settings.hide=='1'?'(HIDDEN)':''}} in label name
+data type->edit item->add {{ 'Image Row'+$index}} {{$settings.hide=='1'?'(HIDDEN)':''}} 
 ------------------------------------------------------
+https://www.youtube.com/watch?v=F762gIK4GVg&list=PL90L_HquhD-81xTOCLLJZLl1roU6hXPhp&index=10&ab_channel=PaulSeal
+How to build a website with Umbraco 10 - Part 10 - Block List Featured Items
 
 ------------------------------------------------------
 
