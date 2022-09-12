@@ -1,0 +1,28 @@
+﻿@model Plumber.Core.Models.Email.HtmlEmailModel
+
+@*
+    Refer to the documentation for Email templates for a full rundown on the available fields
+    or (better option), edit the template in Visual Studio where Intellisense will save you
+*@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <!-- will be used as the email subject line -->
+    <title>Workflow: cancelled</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+</head>
+<body>
+    <div>
+        <h1>Hello @Model.To.Name,</h1> This is the DK version
+        <p>The @Model.Type.ToLower() approval request for <a href="@Model.CurrentTask.BackofficeUrl">@Model.NodeName</a> has been cancelled.</p>
+
+        <hr />
+
+        @Model.Summary
+    </div>
+</body>
+</html>

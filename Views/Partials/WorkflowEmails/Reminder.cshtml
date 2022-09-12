@@ -1,0 +1,30 @@
+﻿@model Plumber.Core.Models.Email.HtmlReminderEmailModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Workflow: overdue tasks</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+</head>
+<body>
+    <div>
+        <h1>Hello @Model.To.Name,</h1>
+        <p>Please complete the overdue @(Model.TaskCount > 1 ? "tasks" : "task"):</p>
+        <ul>
+            @foreach (var task in Model.OverdueTasks)
+            {
+                <li>
+                    <a href="@task.BackofficeUrl">@task.Node.Name</a>
+                    @if (!string.IsNullOrEmpty(task.OfflineApprovalUrl))
+                    {
+                        <span><a href="@task.OfflineApprovalUrl">Offline approval</a> is permitted for this change (no login required).</span>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+</body>
+</html>

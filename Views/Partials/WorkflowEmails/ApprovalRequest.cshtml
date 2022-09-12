@@ -1,0 +1,33 @@
+﻿@model Plumber.Core.Models.Email.HtmlEmailModel
+
+@*
+    Refer to the documentation for Email templates for a full rundown on the available fields
+    or (better option), edit the template in Visual Studio where Intellisense will save you
+*@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <!-- will be used as the email subject line -->
+    <title>Workflow: Approval request</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+</head>
+<body>
+    <div>
+        <h1>Hello @Model.To.Name,</h1>
+        <p>Please review the following page for @Model.Type.ToLower() approval:</p>
+        <ul>
+            <li>
+                <a href="@Model.CurrentTask.BackofficeUrl">@Model.CurrentTask.Node.Name</a>
+                @if (!string.IsNullOrEmpty(Model.CurrentTask.OfflineApprovalUrl))
+                {
+                    <span><a href="@Model.CurrentTask.OfflineApprovalUrl">Offline approval</a> is permitted for this change (no login required).</span>
+                }
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
