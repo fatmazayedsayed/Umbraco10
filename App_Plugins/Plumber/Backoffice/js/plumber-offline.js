@@ -1284,7 +1284,6 @@ const constants_1 = require("../../js/constants");
 const sorter_1 = require("../../js/models/sorter");
 class History {
     constructor($scope, $rootScope, editorState, plmbrWorkflowResource) {
-        var _a, _b;
         this.nodeView = false;
         this.disabledFilters = [];
         this.perPage = 10;
@@ -1313,11 +1312,7 @@ class History {
                 status: []
             };
         }
-        if (this.filters.node) {
-            const activeVariant = this.filters.node.variants.find(x => x.active);
-            this.filters.variant = (_b = (_a = activeVariant === null || activeVariant === void 0 ? void 0 : activeVariant.language) === null || _a === void 0 ? void 0 : _a.culture) !== null && _b !== void 0 ? _b : undefined;
-            this.nodeView = true;
-        }
+        this.nodeView = !!this.filters.node;
         this.onActioned = $rootScope.$on(constants_1.constants.events.workflowActioned, (_, data) => {
             if (this.filters.node && this.filters.node.id === data.nodeId) {
                 this.fetch();
@@ -1702,6 +1697,8 @@ class WorkflowSubmit {
             });
         };
         this.setScheduledDate = (variant, isPublish) => {
+            if (!this.scheduledDate)
+                return;
             const dateToSet = isPublish ? 'releaseDate' : 'expireDate';
             if (variant[dateToSet] === this.scheduledDate) {
                 return;
@@ -1887,23 +1884,21 @@ class WorkflowSubmit {
         // the button handler sets isPublish and is used in initiate()
         this.action = constants_1.constants.actions.publish;
         this.events();
-        userService.getCurrentUser().then(currentUser => {
-            this.currentUser = currentUser;
-            var now = new Date();
-            var nowFormatted = moment(now).format("YYYY-MM-DD HH:mm");
-            this.datepickerConfig = {
-                enableTime: true,
-                dateFormat: "Y-m-d H:i",
-                time_24hr: true,
-                minDate: nowFormatted,
-                defaultDate: null,
-                defaultHour: now.getHours(),
-                defaultMinute: now.getMinutes() + 5
-            };
-            // ensure defaults for scheduling match the defaults for content
-            // ie scheduleDate and scheduledDateFormatted should be null
-            this.datepickerClear();
-        });
+        var now = new Date();
+        var nowFormatted = moment(now).format("YYYY-MM-DD HH:mm");
+        this.datepickerConfig = {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true,
+            minDate: nowFormatted,
+            defaultDate: null,
+            defaultHour: now.getHours(),
+            defaultMinute: now.getMinutes() + 5
+        };
+        // ensure defaults for scheduling match the defaults for content
+        // ie scheduleDate and scheduledDateFormatted should be null
+        this.datepickerClear();
+        userService.getCurrentUser().then(currentUser => this.currentUser = currentUser);
         $scope.$on('$destroy', () => {
             this.onButtonStateChanged();
             this.onAppActive();
@@ -1929,7 +1924,7 @@ exports.SubmitWorkflowComponent = {
         state: '<',
         scope: '<',
     },
-    template:'<div class="workflow"><div class="flex justify-between flex-wrap"><umb-box ng-class="{\'active\' : $ctrl.comment.length, \'no-unpublish-permissions\' : $ctrl.noUnpublishPermissions }" class="umb-box--half d-flex flex-column pos-relative"><umb-box-header title-key="workflow_initiateWorkflow"></umb-box-header><umb-box-content class="d-flex flex-column flex-1"><workflow-comments comment="$ctrl.comment" template-key="$ctrl.templateKey" label-key="$ctrl.labelKey" max-length="250" invalid="$ctrl.invalidComment"></workflow-comments><div class="flex mb-3 date-wrapper__date" ng-if="$ctrl.state.allowAttachments"><label><localize key="workflow_attachment">Attachment (optional)</localize></label><div class="flex" style="font-size:15px"><div><button type="button" ng-click="$ctrl.filepicker()" ng-hide="$ctrl.attachment" class="btn btn-outline-wf"><localize key="workflow_addFile">Add file</localize></button> <button type="button" ng-click="$ctrl.filepicker()" ng-show="$ctrl.attachment" class="btn umb-button--xs" style="outline:none;">{{ $ctrl.attachment.name }}</button></div><button type="button" ng-show="$ctrl.attachment" ng-click="$ctrl.filepickerClear()" class="btn umb-button--xs dropdown-toggle umb-button-group__toggle" style="margin-left: -2px; padding-bottom:0px"><umb-icon icon="icon-wrong"></umb-icon></button></div></div><div class="flex date-wrapper__date mb-3"><label><localize key="workflow_scheduledDate">Scheduled date (optional)</localize></label><div class="btn-group flex" style="font-size:15px"><umb-date-time-picker ng-model="$ctrl.scheduledDate" options="$ctrl.datepickerConfig" on-change="$ctrl.datepickerChange(dateStr)"><div><button type="button" ng-show="$ctrl.scheduledDate" class="btn umb-button--xs" style="outline:none;">{{ $ctrl.scheduledDateFormatted }}</button> <button type="button" class="btn btn-outline-wf" ng-hide="$ctrl.scheduledDate"><localize key="content_setDate">Set date</localize></button></div></umb-date-time-picker><button type="button" ng-show="$ctrl.scheduledDate" ng-click="$ctrl.datepickerClear()" class="btn umb-button--xs dropdown-toggle umb-button-group__toggle" style="margin-left: -2px; padding-bottom:0px"><umb-icon icon="icon-wrong"></umb-icon></button></div></div><small class="d-block mt-1" ng-if="$ctrl.scheduledDate"><localize key="workflow_scheduleDescription">If the scheduled date passes before the workflow is completed, the changes will be published when the final workflow stage has been approved.</localize></small><div class="alert alert-warning mt-auto mb-0" ng-if="$ctrl.scope.contentForm.$dirty"><localize key="workflow_unsavedChanges">Pending content changes will be saved automatically</localize></div></umb-box-content></umb-box><umb-box ng-if="$ctrl.variants.length > 1" ng-class="{\'active\' : $ctrl.selectedVariant != undefined}" class="umb-box--half"><umb-box-header title-key="workflow_selectVariants"></umb-box-header><umb-box-content><ul class="unstyled mb0"><li ng-if="$ctrl.workflowTypeLabels.thisVariant"><umb-toggle checked="$ctrl.selectedVariantName === $ctrl.currentVariant.language.culture" on-click="$ctrl.selectedVariantName = $ctrl.currentVariant.language.culture" show-labels="true" label-position="right" id="workflowType_0" label-on="{{$ctrl.workflowTypeLabels.thisVariant}}" label-off="{{$ctrl.workflowTypeLabels.thisVariant}}"></umb-toggle><div class="mt-1"><small ng-bind="$ctrl.workflowTypeLabels.thisVariantDesc"></small></div></li><li ng-if="$ctrl.state.variantTasks"><div class="alert"><small><localize key="workflow_variantsActiveAndUnavailable">Variant workflows unavailable as the following variants have active workflows:</localize>{{ $ctrl.state.variantTasks.join(\',\') }}</small></div></li><li ng-if="$ctrl.workflowTypeLabels.invariant" class="mt-2"><umb-toggle checked="$ctrl.selectedVariantName === \'*\'" on-click="$ctrl.selectedVariantName = \'*\'" show-labels="true" disabled="$ctrl.state.variantTasks" label-position="right" id="workflowType_1" label-on="{{$ctrl.workflowTypeLabels.invariant}}" label-off="{{$ctrl.workflowTypeLabels.invariant}}"></umb-toggle><div class="mt-1"><small ng-bind="$ctrl.workflowTypeLabels.invariantDesc"></small></div></li><li ng-if="$ctrl.workflowTypeLabels.multiVariant" class="mt-2"><umb-toggle checked="$ctrl.selectedVariantName === \'all\'" on-click="$ctrl.selectedVariantName = \'all\'" show-labels="true" label-position="right" id="workflowType_2" disabled="$ctrl.state.variantTasks" label-on="{{$ctrl.workflowTypeLabels.multiVariant}}" label-off="{{$ctrl.workflowTypeLabels.multiVariant}}"></umb-toggle><div class="mt-1"><small ng-bind="$ctrl.workflowTypeLabels.multiVariantDesc"></small></div></li></ul></umb-box-content></umb-box></div><div class="flex justify-center" ng-class="{\'no-sub-buttons\' : $ctrl.subButtons.length === 0 }" ng-disabled="$ctrl.invalidComment || !$ctrl.selectedVariantName"><umb-button-group button-style="success" default-button="$ctrl.defaultButton" sub-buttons="$ctrl.subButtons" state="$ctrl.buttonState" size="l" direction="up"></umb-button-group></div></div>',
+    template:'<div class="workflow"><div class="flex justify-between flex-wrap"><umb-box ng-class="{\'active\' : $ctrl.comment.length, \'no-unpublish-permissions\' : $ctrl.noUnpublishPermissions }" class="umb-box--half d-flex flex-column pos-relative"><umb-box-header title-key="workflow_initiateWorkflow"></umb-box-header><umb-box-content class="d-flex flex-column flex-1"><workflow-comments comment="$ctrl.comment" template-key="$ctrl.templateKey" label-key="$ctrl.labelKey" max-length="250" invalid="$ctrl.invalidComment"></workflow-comments><div class="flex mb-3 date-wrapper__date" ng-if="$ctrl.state.allowAttachments"><label><localize key="workflow_attachment">Attachment (optional)</localize></label><div class="flex" style="font-size:15px"><div><button type="button" ng-click="$ctrl.filepicker()" ng-hide="$ctrl.attachment" class="btn btn-outline-wf"><localize key="workflow_addFile">Add file</localize></button> <button type="button" ng-click="$ctrl.filepicker()" ng-show="$ctrl.attachment" class="btn umb-button--xs" style="outline:none;">{{ $ctrl.attachment.name }}</button></div><button type="button" ng-show="$ctrl.attachment" ng-click="$ctrl.filepickerClear()" class="btn umb-button--xs dropdown-toggle umb-button-group__toggle" style="margin-left: -2px; padding-bottom:0px"><umb-icon icon="icon-wrong"></umb-icon></button></div></div><div class="flex date-wrapper__date mb-3"><label><localize key="workflow_scheduledDate">Scheduled date (optional)</localize></label><div class="btn-group flex" style="font-size:15px"><umb-date-time-picker ng-model="$ctrl.scheduledDate" options="$ctrl.datepickerConfig" on-change="$ctrl.datepickerChange(dateStr)"><div><button type="button" ng-show="$ctrl.scheduledDate" class="btn umb-button--xs" style="outline:none;">{{ $ctrl.scheduledDateFormatted }}</button> <button type="button" class="btn btn-outline-wf" ng-hide="$ctrl.scheduledDate"><localize key="content_setDate">Set date</localize></button></div></umb-date-time-picker><button type="button" ng-show="$ctrl.scheduledDate" ng-click="$ctrl.datepickerClear()" class="btn umb-button--xs dropdown-toggle umb-button-group__toggle" style="margin-left: -2px; padding-bottom:0px"><umb-icon icon="icon-wrong"></umb-icon></button></div></div><small class="d-block mt-1" ng-if="$ctrl.scheduledDate"><localize key="workflow_scheduleDescription">If the scheduled date passes before the workflow is completed, the changes will be published when the final workflow stage has been approved.</localize></small><div class="alert alert-warning mt-auto mb-0" ng-if="$ctrl.scope.contentForm.$dirty"><localize key="workflow_unsavedChanges">Pending content changes will be saved automatically</localize></div></umb-box-content></umb-box><umb-box ng-if="$ctrl.variants.length > 1" ng-class="{\'active\' : $ctrl.selectedVariant != undefined}" class="umb-box--half"><umb-box-header title-key="workflow_selectVariants"></umb-box-header><umb-box-content><ul class="unstyled mb0"><li ng-if="$ctrl.workflowTypeLabels.thisVariant"><umb-toggle checked="$ctrl.selectedVariantName === $ctrl.currentVariant.language.culture" on-click="$ctrl.selectedVariantName = $ctrl.currentVariant.language.culture" show-labels="true" label-position="right" id="workflowType_0" label-on="{{$ctrl.workflowTypeLabels.thisVariant}}" label-off="{{$ctrl.workflowTypeLabels.thisVariant}}"></umb-toggle><div class="mt-1"><small ng-bind="$ctrl.workflowTypeLabels.thisVariantDesc"></small></div></li><li ng-if="$ctrl.state.variantTasks.length"><div class="alert"><small><localize key="workflow_variantsActiveAndUnavailable">Variant workflows unavailable as the following variants have active workflows:</localize>{{ $ctrl.state.variantTasks.join(\',\') }}</small></div></li><li ng-if="$ctrl.workflowTypeLabels.invariant" class="mt-2"><umb-toggle checked="$ctrl.selectedVariantName === \'*\'" on-click="$ctrl.selectedVariantName = \'*\'" show-labels="true" disabled="$ctrl.state.variantTasks.length" label-position="right" id="workflowType_1" label-on="{{$ctrl.workflowTypeLabels.invariant}}" label-off="{{$ctrl.workflowTypeLabels.invariant}}"></umb-toggle><div class="mt-1"><small ng-bind="$ctrl.workflowTypeLabels.invariantDesc"></small></div></li><li ng-if="$ctrl.workflowTypeLabels.multiVariant" class="mt-2"><umb-toggle checked="$ctrl.selectedVariantName === \'all\'" on-click="$ctrl.selectedVariantName = \'all\'" show-labels="true" label-position="right" id="workflowType_2" disabled="$ctrl.state.variantTasks.length" label-on="{{$ctrl.workflowTypeLabels.multiVariant}}" label-off="{{$ctrl.workflowTypeLabels.multiVariant}}"></umb-toggle><div class="mt-1"><small ng-bind="$ctrl.workflowTypeLabels.multiVariantDesc"></small></div></li></ul></umb-box-content></umb-box></div><div class="flex justify-center" ng-class="{\'no-sub-buttons\' : $ctrl.subButtons.length === 0 }" ng-disabled="$ctrl.invalidComment || !$ctrl.selectedVariantName"><umb-button-group button-style="success" default-button="$ctrl.defaultButton" sub-buttons="$ctrl.subButtons" state="$ctrl.buttonState" size="l" direction="up"></umb-button-group></div></div>',
     controller: WorkflowSubmit
 };
 
