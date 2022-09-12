@@ -138,7 +138,8 @@ add many features to block
 11-create Razor pages for new components   
 
 ------------------------------------------------------
-
+implement notifications using umbraco plumber
+https://our.umbraco.com/documentation/Add-ons/Umbraco-Plumber
 ------------------------------------------------------
 
 ------------------------------------------------------

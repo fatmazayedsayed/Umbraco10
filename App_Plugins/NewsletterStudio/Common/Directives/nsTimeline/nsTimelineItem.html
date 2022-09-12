@@ -1,0 +1,26 @@
+﻿<div>
+    <div>
+        <div class="type-{{type}}">
+            <i class="icon-paper-plane-alt large" ng-if="type=='campaign-delivered'"></i>
+            <i class="icon-imac large" ng-if="type=='campaign-opened'"></i>
+            <i class="icon-hand-pointer large" ng-if="type=='campaign-clicked'"></i>
+            <i class="icon-alert-alt large" ng-if="type=='campaign-delivery-error'"></i>
+            <i class="icon-undo large" ng-if="type=='campaign-unsubscribe-performed'"></i>
+            <i class="icon-browser-window large" ng-if="type=='campaign-view-in-browser'"></i>
+            <i class="icon-bulleted-list large" ng-if="type=='mailinglist-subscribed'"></i>
+            <i class="icon-undo large" ng-if="type=='mailinglist-unsubscribed'"></i>
+            <i class="icon-user large" ng-if="type=='recipient-added'"></i>
+
+            <i class="icon-paper-plane-alt large" ng-if="type=='transactional-delivered'"></i>
+            <i class="icon-alert-alt large" ng-if="type=='transactional-error'"></i>
+            <i class="icon-imac large" ng-if="type=='transactional-opened'"></i>
+            <i class="icon-hand-pointer large" ng-if="type=='transactional-clicked'"></i>
+            
+        </div>
+    </div>
+    <div>
+        <div title="{{timestamp | date:'yyyy-MM-dd HH:mm:ss' : 'UTC'}}">{{timestamp | date:'shortTime' : 'UTC'}}</div>
+        <div ng-transclude="">
+        </div>
+    </div>
+</div>

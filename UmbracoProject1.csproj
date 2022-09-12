@@ -4,9 +4,23 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\media\3nypdq0m\banner.png" />
+    <Content Include="wwwroot\media\b4nn2gfn\home-bg.jpg" />
+    <Content Include="wwwroot\media\n1giynoa\contact-bg.jpg" />
+    <Content Include="wwwroot\media\nsbfvyxy\logo.png" />
+    <Content Include="wwwroot\media\tufkkt4i\post-bg.jpg" />
+    <Content Include="wwwroot\media\uw2cc4qe\meric-dagli-7nbo76g5jse-unsplash.jpg" />
+    <Content Include="wwwroot\media\wdtjrlms\post-sample-image.jpg" />
+    <Content Include="wwwroot\media\xcxncxsd\about-bg.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\media\w0uk2pgs\photo-1516205651411-aef33a44f7c2.avif" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="6.0.5" />
+    <PackageReference Include="NewsletterStudio" Version="4.0.2" />
     <PackageReference Include="Our.Umbraco.Community.Contentment" Version="4.1.3" />
     <PackageReference Include="Plumber.Workflow" Version="10.0.1" />
     <PackageReference Include="Umbraco.Cms" Version="10.1.0" />

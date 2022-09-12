@@ -1,0 +1,106 @@
+﻿<div class="ns-content-wrapper ns-recipients-overview" ng-controller="NewsletterStudio.Controllers.RecipientsOverviewController as vm">
+    
+    <umb-load-indicator ng-if="!vm.data"></umb-load-indicator>
+    
+    <div class="ns-content-header ns-content-header-container">
+        <h5><localize key="ns_recipients"></localize></h5>
+    </div>
+    <div class="ns-content ns-content--full-height" ng-if="vm.data">
+        <div class="ns-lists">
+            <div class="ns-infobox">
+                <span><localize key="ns_total"></localize></span>
+                <div>
+                    <p>{{vm.data.totalActive | number}}</p>
+                    <small><localize key="ns_stats_activeSubscribers"></localize></small>
+                </div>
+            </div>
+            <div class="ns-infobox">
+                <span><localize key="ns_stats_growthLast30Days"></localize></span>
+                <div>
+                    <p>{{vm.data.growthLast30days| number}}</p>
+                    <small><localize key="ns_stats_subscribers"></localize></small>
+                </div>
+            </div>
+            <div class="ns-infobox">
+                <span><localize key="ns_stats_growthLast3Months"></localize></span>
+                <div>
+                    <p>{{vm.data.growthLast3Months | number}}</p>
+                    <small><localize key="ns_stats_subscribers"></localize></small>
+                </div>
+            </div>
+        </div>
+
+        <div class="ns-table-filters">
+            <input type="text"
+                   ng-model="vm.searchFilter"
+                   localize="placeholder"
+                   placeholder="@ns_filterByEmailOrName"
+                   ng-change="vm.updateRecipients(1)"
+                   ng-model-options="{ debounce: 350 }" />
+
+            <div class="btn-group">
+                <a class="btn btn-link" ng-click="vm.showFilterMenu = !vm.showFilterMenu">
+                    <span><localize key="ns_status"></localize>:</span>
+                    <span class="truncate bold">{{vm.selectedFilterText}}</span>
+                    <span class="caret"></span>
+                </a>
+                <umb-dropdown ng-if="vm.showFilterMenu" on-close="campaign.showActionMenu = false" class="ns-dropdown-to-right">
+                    <umb-dropdown-item ng-repeat="opt in vm.statusFilterOptions">
+                        <a ng-click="vm.setStatusFilter(opt);vm.showFilterMenu = !vm.showFilterMenu">
+                            <localize key="{{opt.labelKey}}"></localize></a>
+                    </umb-dropdown-item>
+
+                </umb-dropdown>
+            </div>
+            
+        </div>
+
+        <div class="ns-table ns-table-recipients">
+
+            <div class="ns-table-head">
+                <div class="ns-table-row">
+                    <div class="ns-table-cell ns-cell-avatar">
+                        <!-- Avatar -->
+                    </div>
+                    <div class="ns-table-cell"><localize key="ns_name"></localize></div>
+                    <div class="ns-table-cell"><localize key="ns_email"></localize></div>
+                    <div class="ns-table-cell ns-cell-xsmall"><localize key="ns_lists"></localize></div>
+                    <div class="ns-table-cell"><localize key="ns_source"></localize></div>
+                    <div class="ns-table-cell"><localize key="ns_added"></localize></div>
+                </div>
+
+            </div>
+            <div class="ns-table-body">
+                <div class="ns-table-row ns-table-row-hover" ng-repeat="sub in vm.data.recipients.items track by sub.id" ng-click="vm.openDetails(sub)">
+                    <div class="ns-table-cell ns-cell-avatar">
+                        <ns-avatar email="{{sub.email}}" name="{{sub.name}}" size="s" status="{{sub.status}}"></ns-avatar>
+                    </div>
+                    <div class="ns-table-cell">
+                        {{sub.name}}
+                    </div>
+                    <div class="ns-table-cell">
+                        {{sub.email}}
+                    </div>
+                    <div class="ns-table-cell ns-cell-xsmall">
+                        {{sub.totalActiveLists}}
+                    </div>
+                    <div class="ns-table-cell">
+                        {{sub.source}}
+                    </div>
+                    <div class="ns-table-cell">
+                        {{sub.created | date : 'short'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <umb-pagination page-number="vm.data.recipients.currentPage"
+                        total-pages="vm.data.recipients.totalPages"
+                        on-next="vm.nextPage"
+                        on-prev="vm.prevPage"
+                        on-go-to-page="vm.goToPage">
+        </umb-pagination>
+        
+    </div>
+    
+</div>

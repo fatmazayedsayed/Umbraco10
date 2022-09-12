@@ -1,0 +1,259 @@
+﻿<div class="ns-campaign-report ns-content-wrapper">
+
+    <div class="ns-content-header ns-content-header-with-tabs">
+        <div ng-if="vm.displayHeader" class="ns-content-header-info">
+            <a href="" onclick="history.back(-1)" class="ns-backbutton"><i class="icon-arrow-left"></i></a>
+            <strong><localize key="ns_report"></localize>:&nbsp;</strong>{{vm.data.campaignName}}
+        </div>
+        <div class="ns-content-header-tabs">
+            <ul>
+                <li ng-class="{'selected' : vm.activeTab == 'overview'}" ng-click="vm.setActiveTab('overview')"><localize key="ns_overview"></localize></li>
+                <li ng-class="{'selected' : vm.activeTab == 'recipients'}" ng-click="vm.setActiveTab('recipients')"><localize key="ns_recipients"></localize></li>
+                <li ng-class="{'selected' : vm.activeTab == 'links'}" ng-click="vm.setActiveTab('links')" style="display:none;">
+                    <localize key="ns_links"></localize>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="ns-content ns-content--full-height">
+        
+        <div ng-if="vm.activeTab=='overview'">
+            
+            <div class="overview-summery">
+
+                <div class="funnel">
+                    <ul>
+                        <li>
+                            {{vm.data.countTotalSent | number}}<span><localize key="ns_recipients"></localize></span>
+                        </li>
+                        <li>
+                            {{vm.data.percentOpened | number}}%<span><localize key="ns_opened"></localize></span>
+                        </li>
+                        <li>
+                            {{vm.data.percentClicked | number}}%<span><localize key="ns_clicked"></localize></span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="overview-boxes">
+                    <div>
+                        <div>
+                            <div>
+                                {{vm.data.countTotalSent | number}}
+                            </div>
+                            <span><localize key="ns_emailsSent"></localize></span>
+                        </div>
+                        <div>
+                            <div>
+                                {{vm.data.countUniqueOpen | number}}<span>({{vm.data.percentOpened | number}}%)</span>
+                            </div>
+                            <span><localize key="ns_openedEmail"></localize></span>
+                        </div>
+                        <div>
+                            <div>
+                                {{vm.data.countUniqueClick | number}}<span>({{vm.data.percentClicked | number}}%)</span>
+                            </div>
+                            <span><localize key="ns_clickedLink"></localize></span>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <div>
+                                {{vm.data.countTotalRecipients}}
+                            </div>
+                            <span><localize key="ns_totalRecipients"></localize></span>
+                        </div>
+                        <div>
+                            <div>
+                                {{vm.data.countDeliveryFailed | number}}<span>({{vm.data.percentDeliveryFailed | number}}%)</span>
+                            </div>
+                            <span><localize key="ns_deliveryFailed"></localize></span>
+                        </div>
+                        <div>
+                            <div>
+                                {{vm.data.countUnsubscribed | number}}<span>({{vm.data.percentUnsubscribe | number}}%)</span>
+                            </div>
+                            <span><localize key="ns_unsubscribed"></localize></span>
+                        </div>
+                        
+
+                    </div>
+                </div>
+                <div class="campaign-details">
+
+                    <div>
+                        <span><localize key="ns_subject"></localize></span> {{vm.data.campaignSubject}}
+                    </div>
+                    <div>
+                        <span><localize key="ns_sent"></localize></span> {{vm.data.campaignSentDate | date : 'short' : 'UTC' }}
+                    </div>
+                    <div>
+                        <span><localize key="ns_lists"></localize></span> 
+                        <div ng-repeat="list in vm.data.campaignRecipientLists">
+                            <span ng-if="!list.id">{{list.label}}</span>
+                            <a ng-href="{{vm.nsLocation.getViewPath('mailinglist-details',list.id)}}" ng-if="list.id">{{list.label}}</a>
+                        </div>
+                    </div>
+                    <div>
+                        <span><localize key="ns_senderName"></localize></span> {{vm.data.campaignSenderName}}
+                    </div>
+                    <div>
+                        <span><localize key="ns_senderEmail"></localize></span> {{vm.data.campaignSenderEmail}}
+                    </div>
+                </div>
+            </div>
+            <div class="report-block">
+                <h5><localize key="ns_campaignReport_openClicksFirst24hours"></localize></h5>
+                <div class="ns-box" style="height: 300px; position: relative;">
+                    <canvas class="chart chart-line"
+                            chart-line
+                            chart-data="vm.chart.data"
+                            chart-labels="vm.chart.labels" 
+                            chart-series="vm.chart.series" 
+                            chart-dataset-override="vm.chart.datasetOverride"
+                            chart-options="vm.chart.options"
+                            chart-colors="vm.chart.colors"
+                    >
+                    </canvas>
+                </div>
+            </div>
+            <div class="report-block">
+                <h5><localize key="ns_campaignReport_topLinks"></localize></h5>
+                <div class="ns-box">
+                    <div class="ns-table">
+                        <div class="ns-table-head">
+                            <div class="ns-table-row">
+                                <div class="ns-table-cell not-fixed cell-url">Url</div>
+                                <div class="ns-table-cell"><localize key="ns_uniqueClicks"></localize></div>
+                                <div class="ns-table-cell"><localize key="ns_totalClicks"></localize></div>
+                                <div class="ns-table-cell">CTR</div>
+                                <div class="ns-table-cell">CTOR</div>
+                            </div>
+                        </div>
+                        <div class="ns-table-body">
+                            <div class="ns-table-row" ng-repeat="url in vm.data.clickSummery.clicks track by url.url">
+                                <div class="ns-table-cell not-fixed cell-url">
+                                    <a ng-href="{{url.url}}" target="_blank">
+                                    {{url.url}}<i class="icon icon-out icon-small"></i>
+                                    </a>
+                                </div>
+                                <div class="ns-table-cell">
+                                    {{url.unique | number}}
+                                </div>
+                                <div class="ns-table-cell">
+                                    {{url.total | number}}
+                                </div>
+                                <div class="ns-table-cell">
+                                    {{url.ctr | number}}%
+                                </div>
+                                <div class="ns-table-cell">
+                                    {{url.ctor}}%
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="vm.activeTab == 'recipients'" class="ns-campaign-report__recipients">
+
+            <div>
+                <div>
+                    <select ng-model="vm.data.recipients.request.filterStatus"
+                            ng-change="vm.recipientFilterStatusChanged()"
+                            no-dirty-check
+                            class="ns-select"
+                            >
+                        <option ng-repeat="status in vm.data.recipients.filterStatues"
+                                value="{{status.id}}"
+                                ns-localize-inner="{{status.localizationKey}}">
+                            <p>...</p>
+                        </option>
+                    </select>
+                
+                    <!-- Only show link-picker when link is selected above -->
+                    
+                    <select class="ns-select"
+                            ng-model="vm.data.recipients.request.filterUrl"
+                            ng-change="vm.updateRecipients(1)"
+                            ng-if="vm.data.recipients.request.filterStatus == '2'"
+                            no-dirty-check>
+                        <option value="" ns-localize-inner="ns_campaignReportRecipient_allUrls"></option>
+                        <option ng-repeat="url in vm.data.recipients.filterUrls" value="{{url}}">{{url}}</option>
+                    </select>
+                </div>
+
+                <div>
+                    <input type="text"
+                           localize="placeholder"
+                           placeholder="@ns_filterByEmailOrName"
+                           ng-model="vm.data.recipients.request.filterText"
+                           ng-change="vm.updateRecipients(1)"
+                           ng-model-options="{ debounce: 350 }"
+                           no-dirty-check/>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <localize key="ns_total"></localize>: {{vm.data.recipients.recipients.totalItems}}
+                </div>
+                <div class="ns-table ns-table-recipients">
+
+                    <div class="ns-table-head">
+                        <div class="ns-table-row">
+                            <div class="ns-table-cell ns-cell-avatar">
+                                <!-- Avatar -->
+                            </div>
+                            <div class="ns-table-cell"><localize key="ns_name"></localize></div>
+                            <div class="ns-table-cell"><localize key="ns_email"></localize></div>
+                            <div class="ns-table-cell ns-cell-xsmall"><localize key="ns_opens"></localize></div>
+                            <div class="ns-table-cell ns-cell-xsmall"><localize key="ns_clicks"></localize></div>
+                        </div>
+
+                    </div>
+                    <div class="ns-table-body">
+                        <div class="ns-table-row ns-table-row-hover" ng-repeat="sub in vm.data.recipients.recipients.items" ng-click="vm.openRecipient(sub)">
+                            <div class="ns-table-cell ns-cell-avatar">
+                                <ns-avatar email="{{sub.email}}" name="{{sub.name}}" size="s"></ns-avatar>
+                            </div>
+                            <div class="ns-table-cell">
+                                {{sub.name}}
+                            </div>
+                            <div class="ns-table-cell">
+                                {{sub.email}}
+                            </div>
+                            <div class="ns-table-cell ns-cell-xsmall">
+                                {{sub.opens}}
+                            </div>
+                            <div class="ns-table-cell ns-cell-xsmall">
+                                {{sub.clicks}}
+                            </div>
+                        </div>
+                    </div> 
+
+                </div>
+
+                <umb-pagination page-number="vm.data.recipients.recipients.currentPage"
+                                total-pages="vm.data.recipients.recipients.totalPages"
+                                on-next="vm.nextPage"
+                                on-prev="vm.prevPage"
+                                on-go-to-page="vm.goToPage">
+                </umb-pagination>
+
+            </div>
+
+        </div>
+
+        <div ng-if="vm.activeTab == 'links'">
+            <div>
+                ...
+            </div>
+        </div>
+
+    </div>
+
+
+
+</div>

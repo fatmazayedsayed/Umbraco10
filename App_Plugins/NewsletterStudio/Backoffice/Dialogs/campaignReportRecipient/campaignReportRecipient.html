@@ -1,0 +1,74 @@
+﻿<div class="ns-dialog-campaign-report-recipient" ng-controller="NewsletterStudio.Controllers.Dialogs.CampaignReportRecipientController as vm">
+
+    <umb-editor-view>
+
+        
+        <div class="umb-editor-header">
+            <div>
+                <p>Campaign interactions</p>    
+            </div>
+            
+            <div>
+                <button ng-click="vm.openNsDetails()" ng-if="vm.editButtonType === 'nsEditorService'" class="btn btn-outline">
+                    Show recipient details
+                </button>
+                <button ng-click="vm.openUmbMemberDetails()" ng-if="vm.editButtonType === 'umbMemberEditorService'" class="btn btn-outline">
+                    Show member details
+                </button>
+                <button ng-click="vm.goToLink()" ng-if="vm.editButtonType ==='umbMemberLink'" class="btn btn-outline">
+                    Show member details
+                </button>
+                <button ng-click="vm.goToLink()" ng-if="vm.editButtonType ==='link'" class="btn btn-outline">
+                    Show details
+                </button>
+            </div>
+        </div>
+
+        <umb-editor-container>
+            <ns-timeline>
+                <ns-timeline-date ng-repeat="date in vm.data.timeline.dates" date="date.date">
+                    <ns-timeline-item ng-repeat="item in date.items" type="item.type" timestamp="item.timestamp">
+
+                        <div ng-if="item.type=='campaign-delivered'">
+                            <localize key="ns_campaign">Campaign</localize>  <localize key="ns_campaignReportTimeline_deliveredTo">delivered to</localize> {{item.email}}
+                        </div>
+                        <div ng-if="item.type=='campaign-opened'">
+                            <localize key="ns_campaign">Campaign</localize> <localize key="ns_campaignReportTimeline_opened">opened</localize>
+                        </div>
+                        <div ng-if="item.type=='campaign-clicked'">
+                            <localize key="ns_campaignReportTimeline_clickALink">Clicked a link in campaign</localize>, <localize key="ns_campaignReportTimeline_link">link</localize><br/><a ng-href="{{item.url}}" target="_blank">{{item.url}}</a>
+                        </div>
+                        <div ng-if="item.type=='campaign-delivery-error'">
+                            <localize key="ns_campaignReportTimeline_deliveryOfCampaign">Delivery of campaign</localize> <localize key="ns_campaignReportTimeline_to">to</localize> {{item.email}} <localize key="ns_campaignReportTimeline_failed">failed</localize>.<br/>
+                            <localize key="ns_campaignReportTimeline_errorDetails">Error Details</localize>:<br/>
+                            <span style="color:red">{{item.error}}</span>
+                        </div>
+                        <div ng-if="item.type=='campaign-view-in-browser'">
+                            <localize key="ns_campaignReportTimeline_openedCampaign">Opened campaign</localize> <localize key="ns_campaignReportTimeline_inTheBrowser">in the browser</localize>
+                        </div>
+                        <div ng-if="item.type=='campaign-unsubscribe-performed'">
+                            <localize key="ns_campaignReportTimeline_unsubscribedFromCampaign">Unsubscribed from Campaign</localize> 
+                        </div>
+                        
+                    </ns-timeline-item>
+                </ns-timeline-date>
+            </ns-timeline>
+
+        </umb-editor-container>
+
+        <umb-editor-footer>
+            <umb-editor-footer-content-right>
+                <umb-button type="button"
+                            button-style="link"
+                            label-key="general_close"
+                            shortcut="esc"
+                            action="vm.close()">
+                </umb-button>
+                
+            </umb-editor-footer-content-right>
+        </umb-editor-footer>
+
+    </umb-editor-view>
+
+
+</div>

@@ -1,0 +1,16 @@
+﻿<div class="ns-email-editor-control-wrapper"
+     ng-controller="NewsletterStudio.Controllers.EmailEditorControls.ImageController"
+     ng-style="{'text-align' : control.align, 
+                'padding-top' : control.padding.top,
+                'padding-bottom' : control.padding.bottom,
+                'padding-left' : control.padding.left,
+                'padding-right' : control.padding.right
+                    }">
+    
+    <div ng-if="control.meta.imageUrl">
+        <img ng-src="{{control.meta.imageUrl}}" ng-style="{'width' : control.imageSize + 'px'}" />
+    </div>
+    <div ng-if="!control.meta.imageUrl">
+        <localize key="ns_chooseImage"></localize>
+    </div>
+</div>

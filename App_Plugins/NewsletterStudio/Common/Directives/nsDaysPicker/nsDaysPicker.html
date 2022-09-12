@@ -1,0 +1,12 @@
+﻿<div class="ns-days-picker">
+    <div>
+        <select class="ns-select" ng-model="vm.selectedOption" ng-change="vm.optionChanged()">
+            <option ng-repeat="option in vm.options" value="{{option.value}}">{{option.text}}</option>
+        </select>
+    </div>
+    <div>
+        <div ng-if="vm.selectedOption == 'custom'">
+            <input type="number"  ng-model="vm.customDays" ng-change="vm.customNumberChanged()" /> <ns-localize key="ns_days" lower-case-first="true"></ns-localize>    
+        </div>
+    </div>
+</div>

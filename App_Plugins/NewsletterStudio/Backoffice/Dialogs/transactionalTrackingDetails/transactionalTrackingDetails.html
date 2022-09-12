@@ -1,0 +1,111 @@
+﻿<div class="ns-dialog-transactional-tracking-details" ng-controller="NewsletterStudio.Controllers.Dialogs.TransactionalTrackingDetailsController as vm">
+    <umb-editor-view>
+        <div class="umb-editor-header">
+            <div>
+                <p><localize key="ns_details"></localize></p><!--#{{vm.trackingTransactionalId}}-->
+            </div>
+
+            <div>
+                <a ng-href="{{vm.nsLocation.getViewPath('transactional',vm.data.transactionalEmailKey,'')}}" ng-click="vm.close()" class="btn">
+                    <localize key="ns_transactional_goToTemplate"></localize>
+                </a>
+            </div>
+        </div>
+        <umb-editor-container>
+            
+            <div class="ns-table ns-table-recipients">
+                
+                <div class="ns-table-body">
+                    <div class="ns-table-row">
+                        <div class="ns-table-cell ns-cell-xsmall">
+                            <localize key="ns_sender"></localize>
+                        </div>
+                        <div class="ns-table-cell">
+                            {{vm.data.sender}}
+                        </div>
+                    </div>
+                    <div class="ns-table-row">
+                        <div class="ns-table-cell ns-cell-xsmall">
+                            <localize key="ns_subject"></localize>
+                        </div>
+                        <div class="ns-table-cell">
+                            {{vm.data.subject}}
+                        </div>
+                    </div>
+                    <div class="ns-table-row" ng-repeat="group in vm.data.recipientGroups">
+                        <div class="ns-table-cell ns-cell-xsmall">
+                            <localize key="{{group.headingLocalizationKey}}"></localize>
+                        </div>
+                        <div class="ns-table-cell">
+                            <div>
+                                <div ng-repeat="recipient in group.recipients" class="ns-dialog-transactional-tracking-details__table-inline-row">
+                                    <div>
+                                        <span class="ns-transactional-indicator">
+                                            <span class="ns-transactional-indicator__{{recipient.status}}"></span>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        {{recipient.text}}    
+                                    </div>
+                                    <div>
+                                        <button ng-if="recipient.hasStoredContent" class="btn" ng-click="vm.openMessage(recipient)">
+                                            <localize key="ns_view"></localize>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div style="width:80%;">
+                
+                <ns-timeline>
+                    <ns-timeline-date ng-repeat="date in vm.data.timeline.dates" date="date.date">
+                        <ns-timeline-item ng-repeat="item in date.items" type="item.type" timestamp="item.timestamp">
+
+                            <div ng-if="item.type=='transactional-delivered'">
+                                <localize key="ns_email"></localize> <localize key="ns_campaignReportTimeline_deliveredTo"></localize> {{item.email}}
+                            </div>
+                            <div ng-if="item.type=='transactional-error'">
+                                <localize key="ns_transactional_timeline_couldNotSendTo"></localize> {{item.email}}.<br/><br/>
+                                <div ng-if="item.errorMessage">
+                                    <strong><localize key="ns_transactional_timeline_errorDetails"></localize>:<br/></strong>
+                                    {{item.errorMessage}}    
+                                </div>
+                            </div>
+                            <div ng-if="item.type=='transactional-opened'">
+                                {{item.email}} <localize key="ns_transactional_timeline_openedTheEmail"></localize>
+                                
+                            </div>
+                            <div ng-if="item.type=='transactional-clicked'">
+                                {{item.email}} <localize key="ns_transactional_timeline_clickedALinkTo"></localize> {{item.url}}
+                            </div>
+                            
+                            <p ng-click="item.showData= !item.showData" style="display:none">...</p>
+                            <pre ng-if="item.showData">
+                                        {{item | json}}
+                                    </pre>
+                        </ns-timeline-item>
+                    </ns-timeline-date>
+                </ns-timeline>
+                
+            </div>
+            
+        </umb-editor-container>
+        <umb-editor-footer>
+            <umb-editor-footer-content-right>
+                <umb-button type="button"
+                            button-style="link"
+                            label-key="general_close"
+                            shortcut="esc"
+                            action="vm.close()">
+                </umb-button>
+
+            </umb-editor-footer-content-right>
+        </umb-editor-footer>
+    
+    </umb-editor-view>
+</div>

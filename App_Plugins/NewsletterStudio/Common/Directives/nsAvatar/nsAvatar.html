@@ -1,0 +1,19 @@
+﻿<div class="ns-avatar-wrapper">
+    <div class="ns-avatar ns-avatar-size--{{realSize}}">
+        
+        {{initials}}
+        
+        <div ng-if="avatar" class="imgs">
+            <img ng-src="{{avatar[0]}}" ng-if="realSize=='s'" ng-class="{'show' : showImage}" />
+            <img ng-src="{{avatar[1]}}" ng-if="realSize=='l'" ng-class="{'show' : showImage}" />
+        </div>
+
+        <div class="avatar-status avatar-status-pending" localize="title" title="@ns_subscriptionStatus_Pending" ng-if="status=='pending'"></div>
+        <div class="avatar-status avatar-status-subscribed" localize="title" title="@ns_subscriptionStatus_Subscribed" ng-if="status=='subscribed'"></div>
+        <div class="avatar-status avatar-status-unsubscribed" localize="title" title="@ns_subscriptionStatus_Unsubscribed" ng-if="status=='unsubscribed'"></div>
+        <div class="avatar-status avatar-status-global-unsubscribed" localize="title" title="@ns_subscriptionStatus_GlobalUnsubscribed" ng-if="status=='global-unsubscribed'"></div>
+        <div class="avatar-status avatar-status-error" localize="title" title="@ns_subscriptionStatus_Error" ng-if="status=='error'"></div>
+        
+    </div>
+    
+</div>

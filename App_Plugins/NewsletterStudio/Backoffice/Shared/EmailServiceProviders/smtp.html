@@ -1,0 +1,122 @@
+﻿<div ng-controller="NewsletterStudio.Controllers.SmtpEmailServiceProviderController as sVm" ng-init="sVm.init(vm.model.emailServiceProvider)">
+    
+    <label class="control-group ns-label-full">
+        <span>
+            <localize key="ns_workspace_settingsSmtpHost"></localize>
+            <small><localize key="ns_workspace_settingsSmtpHostDescription"></localize></small>
+        </span>
+        <span>
+            <input type="text" ng-model="sVm.emailServiceProvider.settings.host" name="host" required="" />    
+            <ns-validation-error for="host" alias="required" key="ns_validationRequired"></ns-validation-error>
+        </span>
+    </label>
+    <label class="control-group ns-label-full">
+        <span>
+            <localize key="ns_workspace_settingsSmtpUsername"></localize>
+            <small><localize key="ns_workspace_settingsSmtpUsernameDescription"></localize></small>
+        </span>
+        <span>
+            <input type="text" ng-model="sVm.emailServiceProvider.settings.username" />
+        </span>
+    </label>
+    <label class="control-group ns-label-full">
+        <span>
+            <localize key="ns_workspace_settingsSmtpPassword"></localize>
+            <small><localize key="ns_workspace_settingsSmtpPasswordDescription"></localize></small>
+        </span>
+        <span>
+            <input type="password" ng-model="sVm.emailServiceProvider.settings.password" />
+        </span>
+    </label>
+    <label class="ns-label-full">
+        <span>
+            <localize key="ns_workspace_settingsSmtpSsl"></localize>
+            <small><localize key="ns_workspace_settingsSmtpSslDescription"></localize></small>
+        </span>
+        <span>
+            <input type="checkbox" ng-model="sVm.emailServiceProvider.settings.useSsl" />
+        </span>
+    </label>
+    <label class="control-group ns-label-full">
+        <span>
+            <localize key="ns_workspace_settingsSmtpPort"></localize>
+            <small><localize key="ns_workspace_settingsSmtpPortDescription"></localize></small>
+        </span>
+        <span>
+            <input type="text" ng-model="sVm.emailServiceProvider.settings.port" name="port" style="width:75px" ns-server-validation="mustBeNumeric" />
+            <ns-validation-error for="port" alias="mustBeNumeric" key="ns_validationGenericMustBeNumber"></ns-validation-error>
+        </span>
+    </label>
+    <label class="control-group ns-label-full">
+        <span>
+            <localize key="ns_workspace_settingsSmtpBounceActivate"></localize>
+            <small><localize key="ns_workspace_settingsSmtpBounceActivateDescription"></localize></small>
+        </span>
+        <span>
+            <input type="checkbox" ng-model="sVm.emailServiceProvider.settings.bounceActive" />
+        </span>
+    </label>
+    <div ng-if="sVm.emailServiceProvider.settings.bounceActive">
+        
+        <label class="control-group ns-label-full">
+        <span>
+            <localize key="ns_workspace_settingsSmtpBounceHost"></localize>
+            <small><localize key="ns_workspace_settingsSmtpBounceHostDescription"></localize></small>
+        </span>
+            <span>
+                <input type="text" ng-model="sVm.emailServiceProvider.settings.bounceHost" />    
+            </span>
+        </label>
+        <label class="control-group ns-label-full">
+            <span>
+                <localize key="ns_workspace_settingsSmtpBounceUsername"></localize>
+                <small><localize key="ns_workspace_settingsSmtpBounceUsernameDescription"></localize></small>
+            </span>
+            <span>
+                <input type="text" ng-model="sVm.emailServiceProvider.settings.bounceUsername" />
+            </span>
+        </label>
+        <label class="control-group ns-label-full">
+            <span>
+                <localize key="ns_workspace_settingsSmtpBouncePassword"></localize>
+                <small><localize key="ns_workspace_settingsSmtpBouncePasswordDescription"></localize></small>
+            </span>
+            <span>
+                <input type="password" ng-model="sVm.emailServiceProvider.settings.bouncePassword" />
+            </span>
+        </label>
+        <label class="ns-label-full">
+            <span>
+                <localize key="ns_workspace_settingsSmtpBounceSsl"></localize>
+                <small><localize key="ns_workspace_settingsSmtpBounceSslDescription"></localize></small>
+            </span>
+            <span>
+                <input type="checkbox" ng-model="sVm.emailServiceProvider.settings.bounceUseSsl" />
+            </span>
+        </label>
+        <label class="control-group ns-label-full">
+            <span>
+                <localize key="ns_workspace_settingsSmtpBouncePort"></localize>
+                <small><localize key="ns_workspace_settingsSmtpBouncePortDescription"></localize></small>
+            </span>
+            <span>
+                <input type="text" ng-model="sVm.emailServiceProvider.settings.bouncePort" style="width:75px" />
+            </span>
+        </label>
+        <div>
+            <umb-button
+                    type="button"
+                    button-style="action"
+                    state="sVm.btnTestPop3.state"
+                    label-key="ns_workspace_settingsSmtpBounceTestConnection"
+                    action="sVm.testPop3()">
+            </umb-button>
+            
+        </div>
+    </div>
+    
+    <pre style="display:none;">
+        TODO: Add Settings for Bounce-management.
+    </pre>
+
+</div>

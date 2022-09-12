@@ -1,0 +1,169 @@
+﻿<div ng-controller="NewsletterStudio.Controllers.MailingListDetailsController as vm" class="ns-content-wrapper ns-mailinglist-details" style="width:100%">
+    
+    <div ng-if="vm.data && vm.data.key === '-1'" class="ns-create-new" style="width:100%">
+
+        <form name="createNewMailingList" ng-submit="vm.createNew(createNewMailingList)" val-form-manager novalidate data-elm="ml-form-create">
+            <div class="ns-box">
+                <div>
+                    <h2><localize key="ns_mailingList_createHeading"></localize></h2>    
+                </div>
+                <div>
+                    <div class="control-group">
+                        <label>
+                            <input type="text" ng-model="vm.newName" localize="placeholder" placeholder="@ns_enterNewName" required="" data-elm="ml-name" />
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-success btn-large"><localize key="ns_create"></localize></button>    
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div ng-if="vm.data && vm.data.key !== '-1'" class="ns-content-wrapper">
+        <div class="ns-content-header ns-content-header-container">
+            <div class="ns-content-header-left">
+                <a href="" onclick="history.back(-1)" class="ns-backbutton" ng-if="!vm.isModal"><i class="icon-arrow-left"></i></a>
+                <input type="text" ng-model="vm.data.name" required="" />
+            </div>
+            
+            <div class="ns-content-header-right">
+
+                <div class="btn-group">
+                    <a class="btn btn-link" ng-click="vm.showActionMenu = !vm.showActionMenu" data-elm="ml-actions">
+                        <span><localize key="ns_actions"></localize></span>
+                        <span class="caret"></span>
+                    </a>
+                    <umb-dropdown ng-if="vm.showActionMenu" on-close="campaign.showActionMenu = false" class="ns-dropdown-to-right">
+                        <umb-dropdown-item>
+                            <a ng-click="vm.openImport()" data-elm="ml-actions-import">
+                                <localize key="ns_import"></localize>
+                            </a>
+                        </umb-dropdown-item>
+                        <umb-dropdown-item>
+                            <a ng-click="vm.actionRemoveList()" data-elm="ml-actions-remove">
+                                <localize key="ns_remove"></localize>
+                            </a>
+                        </umb-dropdown-item>
+                        
+                    </umb-dropdown>
+                </div>
+                
+            </div>
+            
+        </div>
+        <div class="ns-content">
+            <div class="ns-lists">
+                <div class="ns-infobox">
+                    <span><localize key="ns_total"></localize></span>
+                    <div>
+                        <p>{{vm.data.totalActive | number}}</p>
+                        <small><localize key="ns_stats_activeSubscribers"></localize></small>
+                    </div>
+                </div>
+                <div class="ns-infobox">
+                    <span><localize key="ns_stats_growthLast30Days"></localize></span>
+                    <div>
+                        <p>{{vm.data.growthLast30days| number}}</p>
+                        <small><localize key="ns_stats_subscribers"></localize></small>
+                    </div>
+                </div>
+                <div class="ns-infobox">
+                    <span><localize key="ns_stats_growthLast3Months"></localize></span>
+                    <div>
+                        <p>{{vm.data.growthLast3Months | number}}</p>
+                        <small><localize key="ns_stats_subscribers"></localize></small>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                
+                <div class="ns-table-filters" ng-if="vm.data.isEmpty === false">
+                    <input type="text"
+                           ng-model="vm.searchFilter"
+                           localize="placeholder"
+                           placeholder="@ns_filterByEmailOrName"
+                           ng-change="vm.updateSubscribers(1)"
+                           ng-model-options="{ debounce: 350 }" />
+                    
+                    <div class="btn-group">
+                        <a class="btn btn-link" ng-click="vm.showFilterMenu = !vm.showFilterMenu">
+                            <span><localize key="ns_status"></localize>:</span>
+                            <span class="truncate bold">{{vm.selectedFilterText}}</span>
+                            <span class="caret"></span>
+                        </a>
+                        <umb-dropdown ng-if="vm.showFilterMenu" on-close="campaign.showActionMenu = false" class="ns-dropdown-to-right">
+                            <umb-dropdown-item ng-repeat="opt in vm.statusFilterOptions">
+                                <a ng-click="vm.setStatusFilter(opt);vm.showFilterMenu = !vm.showFilterMenu">
+                                    <localize key="{{opt.labelKey}}"></localize></a>
+                            </umb-dropdown-item>
+                        </umb-dropdown>
+                    </div>
+                    
+                </div>
+
+                <div ng-if="vm.data.isEmpty">
+                    <div class="ns-box">
+                        <p><localize key="ns_mailingList_listEmptyMessage"></localize></p>
+                    </div>
+                </div>
+                
+                <div ng-if="vm.data.isEmpty === false && vm.data.subscribers.items.length === 0">
+                    <div class="ns-box">
+                        <p><localize key="ns_mailingList_filterNoResultAdjust"></localize></p>
+                    </div>
+                </div>
+    
+                <div class="ns-table ns-table-recipients" ng-if="vm.data.isEmpty === false && vm.data.subscribers.items.length > 0">
+    
+                    <div class="ns-table-head">
+                        <div class="ns-table-row">
+                            <div class="ns-table-cell ns-cell-avatar"></div>
+                            <div class="ns-table-cell"><localize key="ns_name"></localize></div>
+                            <div class="ns-table-cell"><localize key="ns_email"></localize></div>
+                            <div class="ns-table-cell"><localize key="ns_source"></localize></div>
+                            <div class="ns-table-cell"><localize key="ns_subscribed"></localize></div>
+                        </div>
+                    </div>
+                    <div class="ns-table-body">
+                        <div class="ns-table-row ns-table-row-hover" ng-repeat="sub in vm.data.subscribers.items track by sub.id" ng-click="vm.openRecipientDetails(sub)">
+                            <div class="ns-table-cell ns-cell-avatar">
+                                <ns-avatar email="{{sub.email}}" name="{{sub.name}}" size="s" status="{{sub.status}}"></ns-avatar>
+                            </div>
+                            <div class="ns-table-cell">
+                                {{sub.name}}
+                            </div>
+                            <div class="ns-table-cell">
+                                {{sub.email}}
+                            </div>
+                            <div class="ns-table-cell">
+                                {{sub.source}}
+                            </div>
+                            <div class="ns-table-cell">
+                                {{sub.subscribed | date : 'short' : 'UTC'}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <umb-pagination page-number="vm.data.subscribers.currentPage"
+                                total-pages="vm.data.subscribers.totalPages"
+                                on-next="vm.nextPage"
+                                on-prev="vm.prevPage"
+                                on-go-to-page="vm.goToPage">
+                </umb-pagination>
+            </div>
+        </div>
+        <div class="ns-toolbox">
+            <p></p>
+            <umb-button action="vm.save()"
+                        type="button"
+                        button-style="success"
+                        state="vm.saveButtonState"
+                        shortcut="ctrl+s"
+                        label-key="ns_save">
+            </umb-button>
+        </div>
+    </div>
+</div>

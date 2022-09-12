@@ -1,0 +1,203 @@
+﻿<div ng-controller="NewsletterStudio.Controllers.WorkspaceSettingsController as vm">
+
+    <form name="workspaceForm" ng-submit="vm.save(workspaceForm)" val-form-manager novalidate>
+        <div class="ns-content-wrapper ns-workspace-settings">
+            <div class="ns-content-header ns-content-header-container">
+                <div class="ns-content-header-left">
+                    <h5><localize key="ns_workspace_settings"></localize> {{vm.settings.name}}</h5>
+                </div>
+                <div class="ns-content-header-right">
+                    <p><localize key="ns_workspace_workspaceKey"></localize></p>
+                    <p>{{vm.settings.key}}</p>
+                </div>
+
+            </div>
+            <div class="ns-content">
+                <div class="ns-box ns-workspace-license">
+                    <div>
+                        <umb-badge size="s" color="success" ng-if="vm.settings.licenseStatus === 'licensed'">
+                            <localize key="ns_licenced"></localize>
+                        </umb-badge>
+                        <umb-badge size="s" color="warning" ng-if="vm.settings.licenseStatus === 'trial'">
+                            <localize key="ns_trial"></localize>
+                        </umb-badge>
+                        <umb-badge size="s" color="danger" ng-if="vm.settings.licenseStatus === 'invalid'"
+                                   title="This Workspace is licensed but the configured Base URL does not match any domain in the license.">
+                            <localize key="ns_licenseInvalid"></localize>
+                        </umb-badge>
+                        <div ng-show="vm.settings.licenseDetails">
+                            <localize key="ns_license_To"></localize> {{vm.settings.licenseDetails.issuedTo}}
+                            <span ng-if="vm.settings.licenseDetails.hasSubscription"><localize key="ns_license_SubscribedToUpdated"></localize></span>
+                            <span ng-if="!vm.settings.licenseDetails.hasSubscription"><localize key="ns_license_UpdatesIncludedUntil"></localize> {{vm.settings.licenseDetails.validForUpdatesUntil | date: 'shortDate'}}</span>
+                        </div>
+                        <div ng-hide="vm.settings.licenseDetails">
+                            <localize key="ns_license_upgradeNow"></localize>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="{{vm.nsLocation.getViewPath('administration','','')}}"
+                           class="btn btn-info" ng-if="vm.settings.userIsAdmin"><localize key="ns_manage"></localize></a>
+                    </div>
+                </div>
+
+                <div class="ns-section">
+                    <div class="ns-section-header">
+                        <h5><localize key="ns_workspace_settingsSenderDefaultsHeader"></localize></h5>    
+                    </div>
+                    <div class="ns-box ns-workspace-settings-sender-defaults">
+                        <p><localize key="ns_workspace_settingsSenderDefaultsDescription"></localize></p>
+                        <div class="ns-workspace-settings-col2">
+                            <div>
+                                <label class="control-group">
+                                    <span><localize key="ns_name"></localize></span>
+                                    <input type="text" ng-model="vm.settings.defaultSenderName" ng-required="vm.settings.defaultSenderForce" />
+                                </label>
+                            </div>
+                            <div>
+                                <label class="control-group">
+                                    <span><localize key="ns_email"></localize></span>
+                                    <input type="email" ng-model="vm.settings.defaultSenderEmail" ng-required="vm.settings.defaultSenderForce"/>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="ns-checkbox">
+                                <input type="checkbox" ng-model="vm.settings.defaultSenderForce" /> <localize key="ns_workspace_settingsSenderForceDefaults"></localize>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h5><localize key="ns_workspace_settingsDoubleOptIn"></localize></h5>
+                    <div class="ns-box">
+                        <div>
+                            <p><localize key="ns_workspace_settingsDoubleOptInInfo"></localize></p>
+                            <div>
+                                <label class="ns-checkbox">
+                                    <input type="checkbox" ng-model="vm.settings.doubleOptInEnabled"/> <localize key="ns_workspace_settingsEnableDoubleOptIn"></localize>
+                                </label>
+                            </div>
+                            <div ng-if="vm.settings.doubleOptInEnabled" class="control-group">
+                                <span><localize key="ns_workspace_settingsDoubleOptInChooseTemplate"></localize></span>
+                                <small><localize key="ns_workspace_settingsDoubleOptInChooseTemplateInfo"></localize></small>
+                                <ns-transactional-email-picker ng-model="vm.settings.doubleOptInTemplate" required="" min="1" max="1" workspace-key="vm.workspaceKey"></ns-transactional-email-picker>
+                            </div>
+                            <label ng-if="vm.settings.doubleOptInEnabled" class="control-group">
+                                <span><localize key="ns_workspace_settingsDoubleOptInConfirmationUrl"></localize></span>
+                                <small><localize key="ns_workspace_settingsDoubleOptInConfirmationUrlInfo"></localize></small>
+                                <input type="text" ng-model="vm.settings.doubleOptConfirmationUrl" placeholder="https://www.mysite.com/landingpage" style="width:800px;" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h5><localize key="ns_unsubscribe"></localize></h5>
+                    <div class="ns-box">
+                        <label class="control-group">
+                            <span><localize key="ns_workspace_settingsUnsubscribeConfirmationUrl"></localize></span>
+                            <small><localize key="ns_workspace_settingsUnsubscribeConfirmationUrlInfo"></localize></small>
+                            <span>
+                                <input type="text" name="unsubscribeConfirmationUrl" validate-url  ng-model="vm.settings.unsubscribeConfirmationUrl" style="width:800px;" />
+                                <span ng-if="workspaceForm.unsubscribeConfirmationUrl.$error.url">
+                                    <localize key="ns_workspace_BaseUrlValidationUrl"></localize>
+                                </span>    
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="ns-section">
+                    <div class="ns-section-header">
+                        <h5><localize key="ns_campaigns"></localize> - <localize key="ns_workspace_settingsGoogleAnalytics"></localize></h5>    
+                    </div>
+                    <div class="ns-box">
+                        <p><localize key="ns_workspace_settingsGoogleAnalyticsInfo"></localize></p>
+                        <label class="ns-checkbox">
+                            <input type="checkbox" ng-model="vm.settings.googleAnalyticsTrackingEnabled" /> <localize key="ns_workspace_settingsGoogleAnalyticsEnable"></localize>
+                        </label>
+                        <div class="ns-workspace-settings-col2" ng-if="vm.settings.googleAnalyticsTrackingEnabled">
+                            <div>
+                                <label>
+                                    <span>Source</span>
+                                    <small><localize key="ns_workspace_settingsGoogleAnalyticsSourceInfo"></localize><br/><localize key="ns_default"></localize>: NewsletterStudio</small>
+                                    <input type="text" ng-model="vm.settings.googleAnalyticsSource" />
+                                </label>
+                                <label>
+                                    <span>Name</span>
+                                    <small><localize key="ns_workspace_settingsGoogleAnalyticsNameCampaignInfo"></localize></small>
+                                    <input type="text" ng-model="vm.settings.googleAnalyticsName"/>
+                                </label>
+                            </div>
+                            <div>
+                                <label>
+                                    <span>Medium</span>
+                                    <small><localize key="ns_workspace_settingsGoogleAnalyticsMediumInfo"></localize><br/><localize key="ns_default"></localize>: email</small>
+                                    <input type="text" ng-model="vm.settings.googleAnalyticsMedium"/>
+                                </label>
+                                <label>
+                                    <span>Content</span>
+                                    <small><localize key="ns_workspace_settingsGoogleAnalyticsContentCampaignInfo"></localize></small>
+                                    <input type="text" ng-model="vm.settings.googleAnalyticsContent"/>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ns-section">
+                    <div class="ns-section-header">
+                        <h5><localize key="ns_transactionals"></localize> - <localize key="ns_workspace_settingsGoogleAnalytics"></localize></h5>
+                    </div>
+                    <div class="ns-box">
+                        <p><localize key="ns_workspace_settingsGoogleAnalyticsInfo"></localize></p>
+                        <label class="ns-checkbox">
+                            <input type="checkbox" ng-model="vm.settings.transactionalGoogleAnalyticsTrackingEnabled" /> <localize key="ns_workspace_settingsGoogleAnalyticsEnable"></localize>
+                        </label>
+                        <div class="ns-workspace-settings-col2" ng-if="vm.settings.transactionalGoogleAnalyticsTrackingEnabled">
+                            <div>
+                                <label>
+                                    <span>Source</span>
+                                    <small><localize key="ns_workspace_settingsGoogleAnalyticsSourceInfo"></localize><br/><localize key="ns_default"></localize>: NewsletterStudio</small>
+                                    <input type="text" ng-model="vm.settings.transactionalGoogleAnalyticsSource" />
+                                </label>
+                                <label>
+                                    <span>Name</span>
+                                    <small><localize key="ns_workspace_settingsGoogleAnalyticsNameTransactionalInfo"></localize></small>
+                                    <input type="text" ng-model="vm.settings.transactionalGoogleAnalyticsName"/>
+                                </label>
+                            </div>
+                            <div>
+                                <label>
+                                    <span>Medium</span>
+                                    <small><localize key="ns_workspace_settingsGoogleAnalyticsMediumInfo"></localize><br/><localize key="ns_default"></localize>: email</small>
+                                    <input type="text" ng-model="vm.settings.transactionalGoogleAnalyticsMedium"/>
+                                </label>
+                                <label>
+                                    <span>Content</span>
+                                    <small><localize key="ns_workspace_settingsGoogleAnalyticsContentTransactionalInfo"></localize><br/><localize key="ns_default"></localize>: transactional</small>
+                                    <input type="text" ng-model="vm.settings.transactionalGoogleAnalyticsContent"/>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ns-toolbox">
+                <umb-button type="button"
+                            button-style="link"
+                            label-key="general_cancel"
+                            shortcut="esc"
+                            action="vm.cancel()">
+                </umb-button>
+                <umb-button
+                        type="submit"
+                        button-style="success"
+                        state="vm.btnSaveState"
+                        shortcut="ctrl+s"
+                        label-key="ns_save">
+                </umb-button>
+            </div>
+        </div>
+    </form>
+</div>

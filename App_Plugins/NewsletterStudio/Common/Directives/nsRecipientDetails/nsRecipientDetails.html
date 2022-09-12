@@ -1,0 +1,232 @@
+﻿<form name="recipientDetails" ng-submit="vm.save(recipientDetails)" val-form-manager novalidate>
+    <div class="ns-content-wrapper ns-recipients-details">
+        <div class="ns-content-header ns-content-header-container">
+            <div class="ns-content-header-left">
+                <a href="" onclick="history.back(-1)" class="ns-backbutton" ng-if="!vm.isModal"><i class="icon-arrow-left"></i></a>
+                <p><strong>{{vm.data.recipient.firstname}} {{vm.data.recipient.lastname}}</strong> &lt;{{vm.data.recipient.email}}&gt;</p>
+            </div>
+            <div class="ns-content-header-right">
+                <div class="btn-group">
+                    <a class="btn btn-link" ng-click="vm.showActionMenu = !vm.showActionMenu">
+                        <span><localize key="ns_actions"></localize></span>
+                        <span class="caret"></span>
+                    </a>
+                    <umb-dropdown ng-if="vm.showActionMenu" on-close="campaign.showActionMenu = false" class="ns-dropdown-to-right">
+                        <umb-dropdown-item>
+                            <a ng-click="vm.deleteRecipient()">
+                                <localize key="ns_remove"></localize>
+                            </a>
+                        </umb-dropdown-item>
+                    </umb-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="ns-content">
+            <div>
+                <div>
+                    <div class="alert alert-error" ng-if="vm.data.recipient.errorCount >= vm.data.systemMaxErrorCount">
+                        
+                        <localize key="ns_recipientDetails_errorCountLimit" tokens="[vm.data.systemMaxErrorCount]"></localize>
+                        
+                        <button class="btn btn-white" type="button" ng-click="vm.resetErrorCount()">
+                            <localize key="ns_recipientDetails_errorsResetErrors"></localize>
+                        </button>
+                    </div>
+                </div>
+                
+                <div ng-if="vm.data.recipient.globalUnsubscribed">
+                    <div class="alert alert-warning">
+                        <localize key="ns_recipientDetails_globalUnsubscribed"></localize>
+                    </div>
+                </div>
+               
+                <div class="ns-section-header">
+                    <h5><localize key="ns_subscriptions"></localize></h5>    
+                    <div class="actions" ng-if="vm.selectableLists.length > 0">
+                        <button class="btn btn-outline" ng-click="vm.showAddSubscription()" type="button">+ <localize key="ns_recipientDetails_subscribeToList"></localize></button>
+                        <div class="ns-box" ng-if="vm.addSubscriptionVisible">
+                            <label>
+                                <span><localize key="ns_recipientDetails_chooseList"></localize></span>
+                                <select class="ns-select" 
+                                        ng-model="vm.addSubscriptionMailingListId"
+                                        ng-change="vm.addSubscriptionShowError=false"
+                                    >
+                                    <option value="" ns-localize-inner="ns_option_choose_mailingList"></option>
+                                    <option ng-repeat="mailingList in vm.selectableLists"
+                                            value="{{mailingList.id}}">
+                                        {{mailingList.label}}
+                                    </option>
+                                </select>
+                                <span ng-if="vm.addSubscriptionShowError" class="ns-error">
+                                    <localize key="ns_recipientDetails_chooseAList"></localize>
+                                </span>
+                            </label>
+                            <div>
+                                <button class="btn btn-action" type="button" ng-click="vm.addSubscription()"><localize key="ns_recipientDetails_addSubscription"></localize></button>
+                                <button class="btn btn-link" type="button" ng-click="vm.addSubscriptionVisible = false"><localize key="general_cancel"></localize></button>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="ns-table">
+                    <div class="ns-table-head">
+                        <div class="ns-table-row">
+                            <div class="ns-table-cell not-fixed"><localize key="ns_list"></localize></div>
+                            <div class="ns-table-cell"><localize key="ns_added"></localize></div>
+                            <div class="ns-table-cell"><localize key="ns_status"></localize></div>
+                        </div>
+                    </div>
+                    <div class="ns-table-body">
+                        <div class="ns-table-row" ng-repeat="list in vm.data.subscriptions track by list.name">
+                            <div class="ns-table-cell not-fixed">
+                                <a ng-href="{{vm.nsLocation.getViewPath('mailinglist-details',list.mailingListKey)}}">
+                                    {{list.name}}    
+                                </a>
+                            </div>
+                            <div class="ns-table-cell">
+                                {{list.subscribed | date : 'short'}}
+                            </div>
+                            <div class="ns-table-cell">
+                                <select ng-model="list.status" ng-change="vm.listStatusChanged(list,$event)" class="ns-select">
+                                    <option ng-repeat="status in vm.data.subscriptionStatuses" 
+                                            value="{{status.id}}" 
+                                            ns-localize-inner="{{status.localizationKey}}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <ns-timeline>
+                        <ns-timeline-date ng-repeat="date in vm.data.timeline.dates" date="date.date">
+                            <ns-timeline-item ng-repeat="item in date.items" type="item.type" timestamp="item.timestamp">
+                                
+                                <div ng-if="item.type=='campaign-delivered'">
+                                    <localize key="ns_campaign">Campaign</localize> <a ng-click="vm.goToUrl(vm.nsLocation.getViewPath('campaign-report',item.data4))" href="{{vm.nsLocation.getViewPath('campaign-report',item.data4)}}">{{item.data2}}</a> <localize key="ns_campaignReportTimeline_deliveredTo">delivered to</localize> {{item.data1}}
+                                </div>
+                                <div ng-if="item.type=='campaign-clicked'">
+                                    <localize key="ns_campaignReportTimeline_clickALink">Clicked a link in campaign</localize> <a ng-click="vm.goToUrl(vm.nsLocation.getViewPath('campaign-report',item.data3))" href="{{vm.nsLocation.getViewPath('campaign-report',item.data3)}}">{{item.data2}}</a>, <localize key="ns_campaignReportTimeline_link">link</localize> <a ng-href="{{item.data1}}" target="_blank">{{item.data1}}</a>
+                                </div>
+                                <div ng-if="item.type=='campaign-opened'">
+                                    <localize key="ns_campaign">Campaign</localize> <a ng-click="vm.goToUrl(vm.nsLocation.getViewPath('campaign-report',item.data3))" href="{{vm.nsLocation.getViewPath('campaign-report',item.data3)}}">{{item.data2}}</a> <localize key="ns_campaignReportTimeline_opened">opened</localize>
+                                </div>
+                                <div ng-if="item.type=='campaign-unsubscribe-performed'">
+                                    <localize key="ns_campaignReportTimeline_unsubscribedFromCampaign">Unsubscribed from Campaign</localize> <a ng-click="vm.goToUrl(vm.nsLocation.getViewPath('campaign-report',item.data3))" href="{{vm.nsLocation.getViewPath('campaign-report',item.data3)}}">{{item.data2}}</a>
+                                </div>
+                                <div ng-if="item.type=='campaign-delivery-error'">
+                                    <localize key="ns_campaignReportTimeline_deliveryOfCampaign">Delivery of campaign</localize> <a ng-click="vm.goToUrl(vm.nsLocation.getViewPath('campaign-report',item.data3))" href="{{vm.nsLocation.getViewPath('campaign-report',item.data3)}}">{{item.data2}}</a> <localize key="ns_campaignReportTimeline_to">to</localize> {{item.data1}} <localize key="ns_campaignReportTimeline_failed">failed</localize>.<br/>
+                                    <localize key="ns_campaignReportTimeline_errorDetails">Error Details</localize>:<br/>
+                                    <span style="color:red">{{item.data3}}</span>
+                                </div>
+                                <div ng-if="item.type=='campaign-view-in-browser'">
+                                    <localize key="ns_campaignReportTimeline_openedCampaign">Opened campaign</localize> <a ng-click="vm.goToUrl(vm.nsLocation.getViewPath('campaign-report',item.data3))" href="{{vm.nsLocation.getViewPath('campaign-report',item.data3)}}">{{item.data2}}</a> <localize key="ns_campaignReportTimeline_inTheBrowser">in the browser</localize>
+                                </div>
+                                <div ng-if="item.type=='mailinglist-subscribed'">
+                                    <localize key="ns_campaignReportTimeline_subscribedToList">Subscribed to list</localize> <a ng-click="vm.goToUrl(vm.nsLocation.getViewPath('mailinglist-details',item.data2))" href="{{vm.nsLocation.getViewPath('mailinglist-details',item.data2)}}">{{item.data1}}</a></div>
+                                <div ng-if="item.type=='mailinglist-unsubscribed'">
+                                    <localize key="ns_campaignReportTimeline_unsubscribedFromList">Unsubscribed from list</localize>"{{item.data1}}"
+                                </div>
+                                
+                                <div ng-if="item.type=='recipient-added'">
+                                    <localize key="ns_campaignReportTimeline_recipientAddedViaSource">Recipient added via source</localize> "{{item.data2}}"
+                                </div>
+                                <div ng-if="item.type=='transactional-delivered'">
+                                    <localize key="ns_recipientTimeline_transactionalEmail"></localize> <a href="" ng-click="vm.timelineOpenTrackingTransactional(item.data5)">"{{item.data4}}"</a> <localize key="ns_recipientTimeline_wasSentTo"></localize> {{item.data1}}.
+                                    
+                                    <div ng-if="item.data2" style="margin-top:10px">
+                                        <button type="button" class="btn btn-small" ng-click="vm.showTransactionalMessage(item.data2)">
+                                            <localize key="ns_recipientTimeline_viewMessage"></localize>
+                                        </button>
+                                    </div>
+                                    
+                                </div>
+                                <div ng-if="item.type=='transactional-error'">
+                                    <localize key="ns_recipientTimeline_couldNotDeliver"></localize> "{{item.data4}}" <localize key="ns_recipientTimeline_to"></localize> {{item.data1}}. <br/>
+                                    <div ng-if="item.data3">
+                                        <localize key="ns_recipientTimeline_details"></localize>:<br/> {{item.data3}}    
+                                    </div>
+                                    
+                                </div>
+                                <div ng-if="item.type=='transactional-opened'">
+                                    <localize key="ns_recipientTimeline_openedEmail"></localize> <a href="" ng-click="vm.timelineOpenTrackingTransactional(item.data5)">"{{item.data4}}"</a>
+
+                                    <div ng-if="item.data3" style="margin-top:10px">
+                                        <button type="button" class="btn btn-small" ng-click="vm.showTransactionalMessage(item.data3)">
+                                            <localize key="ns_recipientTimeline_viewMessage"></localize>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div ng-if="item.type=='transactional-clicked'">
+                                    <localize key="ns_recipientTimeline_transactionalClickedLink"></localize> <a href="#" ng-click="vm.timelineOpenTrackingTransactional(item.data5)">"{{item.data4}}"</a> <localize key="ns_recipientTimeline_to"></localize> <a ng-href="{{item.data2}}" target="_blank">{{item.data2}}</a>
+                                </div>
+                                <p ng-click="item.showData= !item.showData" ng-if="true==false">...</p>
+                                <pre ng-if="item.showData">
+                                    {{item | json}}
+                                </pre>
+                            </ns-timeline-item>
+                        </ns-timeline-date>
+                    </ns-timeline>
+                </div>
+            </div>
+            <div>
+                <div class="ns-box">
+                    <div class="avatar-center">
+                        <ns-avatar email="{{vm.data.recipient.email}}" name="{{vm.data.recipient.name}}" size="l"></ns-avatar>
+                    </div>
+                    <label class="control-group">
+                        <span><localize key="ns_email"></localize></span> 
+                        <input name="email" type="email" ng-model="vm.data.recipient.email" required="" ns-server-validation="emailAlreadyInUse">
+                        <ns-validation-error for="email" alias="required" key="ns_validationGenericEmailRequired"></ns-validation-error>
+                        <ns-validation-error for="email" alias="email" key="ns_validationGenericEmailValid"></ns-validation-error>
+                        <ns-validation-error for="email" alias="emailAlreadyInUse" key="ns_validateRecipientEmailAlreadyInUse"></ns-validation-error>
+                    </label>
+                    <label>
+                        <span><localize key="ns_firstname"></localize></span>
+                        <input type="text" ng-model="vm.data.recipient.firstname">
+                    </label>
+                    <label>
+                        <span><localize key="ns_lastname"></localize></span>
+                        <input type="text" ng-model="vm.data.recipient.lastname">
+                    </label>
+                    <label>
+                        <span><localize key="ns_globallyUnsubscribed"></localize></span>
+                        <input type="checkbox" ng-model="vm.data.recipient.globalUnsubscribed" />
+                    </label>
+                    <label>
+                        <span><localize key="ns_uniqueKey"></localize></span>
+                        <small>{{vm.data.recipient.key}}</small>
+                    </label>
+                    <label>
+                        <span><localize key="ns_source"></localize></span>
+                        <small>{{vm.data.recipient.source}}</small>
+                    </label>
+                </div>
+                <div class="ns-box" ng-if="vm.data.recipient.customFields.length > 0">
+                    <label ng-repeat="field in vm.data.recipient.customFields">
+                        <span>{{field.fieldLabel}}</span>
+                        <input type="text" ng-model="field.value" />
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="ns-toolbox">
+            <umb-button type="button"
+                        button-style="link"
+                        label-key="general_close"
+                        shortcut="esc"
+                        action="vm.close()"
+                        ng-if="vm.isModal">
+            </umb-button>
+            <umb-button 
+                        type="submit"
+                        button-style="success"
+                        state="vm.saveButtonState"
+                        shortcut="ctrl+s"
+                        label-key="ns_save">
+            </umb-button>
+        </div>
+    </div>
+</form>

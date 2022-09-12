@@ -1,0 +1,11 @@
+﻿<ul class="ns-toggle-button">
+    <li ng-repeat="toggle in toggleOptions" ns-localize="title" ns-localize-title-key="{{toggle.tooltipKey}}"
+        ng-click="selectOption(toggle)"
+        ng-class="{'selected' : toggle.selected}">
+
+        <span ng-if="!toggle.icon && !toggle.iconSvg">{{toggle.text}}</span>
+        <span ng-if="toggle.icon"><i class="icon {{toggle.icon}}"></i></span>
+        <span ng-if="toggle.iconSvg" class="icon"><ns-html html="toggle.iconSvg"></ns-html></span>
+
+    </li>
+</ul>

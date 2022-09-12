@@ -1,0 +1,264 @@
+﻿<div ng-controller="NewsletterStudio.Controllers.AdministrationController as vm">
+
+    <div class="ns-administration">
+        
+        <div ng-if="vm.view === 'create'" class="ns-content-wrapper">
+            
+            <div class="ns-create-new">
+        
+                <form name="createNewForm" ng-submit="vm.createNew(createNewForm)" val-form-manager novalidate>
+                    <div class="ns-box">
+                        <div>
+                            <h2><localize key="ns_administration_createNewWorkspaceHeading"></localize></h2>
+                        </div>
+                        <div>
+                            <div class="control-group">
+                                <label>
+                                    <input type="text" ng-model="vm.newName" localize="placeholder" placeholder="@ns_enterNewName" required="" />
+                                </label>
+                            </div>
+                            <div>
+                                <label class="ns-checkbox" localize="title" title="@ns_administration_createEmptyInstanceInfo">
+                                    <input type="checkbox" ng-model="vm.newCreateEmptyInstance" /> <localize key="ns_administration_createEmptyInstance"></localize>
+                                </label>  
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-success btn-large"><localize key="ns_create"></localize></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div ng-if="vm.view === 'overview'" class="ns-content-wrapper">
+        
+            <div class="ns-content-header ns-content-header-container">
+                <div class="ns-content-header-left">
+                    <h5><localize key="ns_administration"></localize></h5>
+                </div>
+                <div class="ns-content-header-right">
+                    <a ng-href="{{vm.nsLocation.getViewPath('administration-about','','')}}" class="btn btn-link"><localize key="ns_about"></localize></a>
+                </div>
+            </div>
+            <div class="ns-content ns-content--full-height" ng-show="vm.workspaces">
+                <div class="ns-box ns-workspace-license">
+                    <div>
+                        <div ng-click="vm.showLicenseDetails = !vm.showLicenseDetails">
+                            <div>
+                                <umb-badge size="s" color="success" ng-if="vm.licenseDetails.licenseStatus ==='licensed'">
+                                    <localize key="ns_licenced"></localize>
+                                </umb-badge>
+                                <umb-badge size="s" color="warning" ng-if="!vm.licenseDetails">
+                                    <localize key="ns_trial"></localize>
+                                </umb-badge>
+                                <umb-badge size="s" color="danger" ng-if="vm.licenseDetails.licenseStatus ==='expired'">
+                                    <localize key="ns_expired"></localize>
+                                </umb-badge>
+                                <div ng-show="vm.licenseDetails">
+                                    <localize key="ns_license_To"></localize> {{vm.licenseDetails.issuedTo}} 
+                                    <span ng-if="vm.licenseDetails.hasSubscription"><localize key="ns_license_SubscribedToUpdated"></localize></span>
+                                    <span ng-if="!vm.licenseDetails.hasSubscription"><localize key="ns_license_UpdatesIncludedUntil"></localize> {{vm.licenseDetails.validForUpdatesUntil | date : 'shortDate'}}</span>
+                                </div>
+                                <div ng-hide="vm.licenseDetails">
+                                    <localize key="ns_license_upgradeNow"></localize>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="icon-navigation-up" ng-class="{'open' : vm.showLicenseDetails}"></span>
+                            </div>
+                        </div>
+                        <div ng-if="vm.showLicenseDetails && vm.licenseDetails">
+                            <div>
+                                <h4>License details</h4>
+                                <p>
+                                    <strong>License Name:</strong> {{vm.licenseDetails.licenseName}}<br/>
+                                    <strong>Issued to:</strong> {{vm.licenseDetails.issuedTo}}<br/>
+                                    <strong>Valid for major-version:</strong> {{vm.licenseDetails.validUntilMajorVersion}}<br/>
+                                    <strong>License-id: </strong>{{vm.licenseDetails.licenseKey}}<br/>
+                                </p>
+                                    
+                                <div ng-if="vm.licenseDetails.hasSubscription">
+                                    <p>
+                                        <strong>Subscription renews: </strong>{{vm.licenseDetails.subscriptionRenews | date : 'shortDate'}}<br/>
+                                    </p>
+                                </div>
+                                <div ng-if="!vm.licenseDetails.hasSubscription">
+                                    <p>
+                                        <strong>Updates included until:</strong> {{vm.licenseDetails.validForUpdatesUntil | date : 'shortDate'}}<br/>        
+                                    </p>
+                                </div>
+                                <div ng-if="vm.licenseDetails.licenseStatus === 'expired'">
+                                    <div>
+                                        <strong>Note!</strong> This license has expired. It can only be used for releases up until {{vm.licenseDetails.validForUpdatesUntil | date : 'shortDate'}}.<br/>
+                                        This Newsletter Studio-version was relesed: {{vm.licenseDetails.packageReleaseDate | date : 'shortDate'}}.<br/>
+                                        The package will run in trial-mode until the license is upgraded.<br/>
+                                        <br/>
+                                        To upgrade, visit <a href="https://www.newsletterstudio.org" target="_blank">newsletterstudio.org</a>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div ng-repeat="workspace in vm.licenseDetails.workspaces">
+                                    <h5>Workspace {{$index + 1}} ({{workspace.key || 'Not connected'}})</h5>
+                                    <p>
+                                        <span ng-repeat="host in workspace.domains">{{host}}<br/></span>
+                                    </p>    
+                                </div>
+                                
+                            </div> 
+                        </div> 
+                        <div ng-if="vm.showLicenseDetails && !vm.licenseDetails">
+                            <div>
+                                <h3>What to upgrade?</h3>
+                                <p>
+                                    Take it to the next level and upgrade to the full version, see plans and pricing on
+                                    our website.
+                                </p>
+                                <a href="https://www.newsletterstudio.org" class="btn btn-outline">Go to newsletterstudio.org</a>
+                            </div>
+                            <div class="ns-license-mapper">
+                                <div ng-if="vm.connectLicenseView == 'login'" class="ns-license-step-login">
+                                    <h3>Already have a license?</h3>
+                                    <p>Login with your newsletterstudio.org-account to connect and download the license.</p>
+                                    <div>
+                                        <input type="text" placeholder="E-mail" ng-model="vm.email"/>
+                                    </div>
+                                    <div>
+                                        <input type="password" placeholder="Password" ng-model="vm.password"/>
+                                    </div>
+
+                                    <umb-button
+                                            type="button"
+                                            action="vm.login()"
+                                            button-style="success"
+                                            state="vm.licenseMapButtonLoginStatus"
+                                            label="Connect and download license">
+                                    </umb-button>
+                                    
+                                </div>
+                                <div ng-if="vm.connectLicenseView == 'choose'" class="ns-license-step-choose">
+                                    <h3>Choose which license to connect</h3>
+<!--                                    <p>-->
+<!--                                        Visa license name och kort info om Workspaces.-->
+<!--                                        Detta steg kan gå direkt till "färdig" om det bara finns en workspace.-->
+<!--                                    </p>-->
+                                    <hr />
+                                    <div>
+                                        <div ng-repeat="license in vm.licenseList">
+                                            <div>
+                                                <umb-button
+                                                        type="button"
+                                                        action="vm.selectLicense(license)"
+                                                        button-style="success"
+                                                        state="license.btnStatus"
+                                                        label="Use this">
+                                                </umb-button>
+                                            </div>
+                                            <div>
+                                                <h4>License name: {{license.name}}</h4>
+                                                <div ng-repeat="workspace in license.workspaces">
+                                                    <p>
+                                                        <strong>Workspace {{workspace.workspaceNumber}}</strong><br/>
+                                                        Domains: {{workspace.hosts.join(', ')}}
+                                                    </p>
+                                                </div>    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="vm.connectLicenseView == 'map'">
+                                    <h3>Map Workspaces for License</h3>
+                                    <p>The goal here is to say which of the workspaces in this solution that should map to a workspace in the license.</p>
+                                    
+                                    <div ng-repeat="licenseWorkspace in vm.selectedLicense.workspaces">
+                                        <h4>License-Workspace: {{licenseWorkspace.workspaceNumber}}</h4>
+                                        <p>Domains: {{licenseWorkspace.hosts.join(',')}}</p>
+                                        <p>
+                                            Maps to:
+                                        </p>
+                                        <div ng-if="licenseWorkspace.isLocked">
+                                            <select ng-model="licenseWorkspace.key" disabled>
+                                                <option value="">None</option>
+                                                <option ng-repeat="ws in vm.workspaces" value="{{ws.key}}">{{ws.name}}</option>
+                                            </select>
+                                        </div>
+                                        <div ng-if="!licenseWorkspace.isLocked">
+                                            <select ng-model="licenseWorkspace.key" ng-change="vm.licenseMapped()">
+                                                <option value="">None</option>
+                                                <option ng-repeat="ws in licenseWorkspace.dropDownWorkspaces" value="{{ws.key}}">{{ws.name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <umb-button
+                                            type="button"
+                                            action="vm.performMapping()"
+                                            button-style="success"
+                                            state="vm.licenseMapButtonPerformMapStatus"
+                                            label="Save mappings and connect license">
+                                    </umb-button>
+                                    
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <button class="btn btn-outline" ng-click="vm.showAdd()">
+                        <localize key="ns_workspace_addNew"></localize>
+                    </button>
+                    <br/><br>
+                </div>
+        
+                <div class="ns-table">
+                    <div class="ns-table-head">
+                        <div class="ns-table-row">
+                            <div class="ns-table-cell"><localize key="ns_name"></localize></div>
+                            <div class="ns-table-cell"><localize key="ns_workspace_licenseStatus"></localize></div>
+                            <div class="ns-table-cell"></div>
+                        </div>
+        
+                    </div>
+                    <div class="ns-table-body">
+                        <div class="ns-table-row" ng-repeat="workspace in vm.workspaces track by workspace.id">
+        
+                            <div class="ns-table-cell">
+                                <a ng-href="{{vm.nsLocation.getViewPath('administration-manage','',workspace.key)}}">
+                                    {{workspace.name}}
+                                </a>
+                            </div>
+                            <div class="ns-table-cell ns-cell-permissions-summery">
+
+                                <umb-badge size="s" color="success" ng-if="workspace.licenseStatus === 'licensed'">
+                                    <localize key="ns_licenced"></localize>
+                                </umb-badge>
+                                <umb-badge size="s" color="warning" ng-if="workspace.licenseStatus === 'trial'">
+                                    <localize key="ns_trial"></localize>
+                                </umb-badge>
+                                <umb-badge size="s" color="danger" ng-if="workspace.licenseStatus === 'invalid'" title="This Workspace is licensed but the configured Base URL does not match any domain in the license.">
+                                    <localize key="ns_licenseInvalid"></localize>
+                                </umb-badge>
+                                <umb-badge size="s" color="danger" ng-if="workspace.licenseStatus === 'expired'" title="The license used is not valid for this release. The release date of this Newsletter Studio-version is higher than the allowed release date in the license.">
+                                    <localize key="ns_expired"></localize>
+                                </umb-badge>
+                            </div>
+                            <div class="ns-table-cell ns-cell-permissions-change">
+        
+                                <a class="btn btn-info" ng-href="{{vm.nsLocation.getViewPath('administration-manage','',workspace.key)}}">
+                                    <localize key="ns_manage"></localize>
+                                </a>
+                                
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+                
+            </div>
+            
+        </div>
+    </div>
+
+</div>

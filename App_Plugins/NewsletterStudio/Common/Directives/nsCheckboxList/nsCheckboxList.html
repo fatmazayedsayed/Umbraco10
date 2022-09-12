@@ -1,0 +1,5 @@
+﻿<div>
+    <label ng-repeat="option in vm.options">
+        <input type="checkbox" ng-model="option.checked" ng-change="vm.changed()" /> {{vm.useLabels ? option.label : ''}} <localize key="{{option.localizationKey}}" ng-if="!vm.useLabels" />
+    </label>
+</div>

@@ -1,0 +1,50 @@
+﻿<div ng-controller="NewsletterStudio.Controllers.EmailEditorControls.ImageEditController as editVm" 
+     ng-init="editVm.init(vm,vm.selectedControl)"
+     class="ns-block-editor ns-ec-image-edit">
+    
+    <ns-umb-property label="ns_image" description="">
+        
+        <umb-property-editor model="editVm.imagePicker" style="min-height:136px;"></umb-property-editor>
+
+    </ns-umb-property>
+    
+    <div class="ns-property-group">
+        <ns-umb-property label="ns_linkTo" description="">
+            <ns-link-editor ng-model="editVm.control.link"></ns-link-editor>
+        </ns-umb-property>
+    </div>
+
+    <ns-umb-property label="ns_margin" description="">
+        <ns-margin-editor ng-model="editVm.control.padding"></ns-margin-editor>
+    </ns-umb-property>
+
+    <div class="ns-property-group two-cols">
+
+        <ns-umb-property label="ns_aspectRatio" description="">
+            <select ng-model="editVm.control.aspectRatio">
+                <option value="original">Original</option>
+                <option value="169">16:9</option>
+                <option value="43">4:3</option>
+                <option value="square">Square</option>              
+                <option value="custom">Custom</option>
+            </select>
+        </ns-umb-property>
+        <ns-umb-property label="ns_align" description="">
+            <ns-toggle-button ng-model="editVm.control.align" options="vm.toggleOptionsAlign"></ns-toggle-button>
+        </ns-umb-property>
+    </div>
+    
+    <ns-umb-property label="ns_imageSize" description="" ng-if="editVm.control && editVm.control.imageSize">
+        <ns-slider ng-model="editVm.control.imageSize" min="1" max="editVm.control.meta.imageMax"></ns-slider>
+    </ns-umb-property>
+    
+    <div class="two-cols" ng-show="editVm.control.aspectRatio == 'custom'">
+        <ns-umb-property label="ns_width" description="">
+            <input type="number" ng-model="editVm.control.imageSize" ng-disabled="editVm.control.aspectRatio != 'custom'" />    
+        </ns-umb-property>
+        <ns-umb-property label="ns_height" description="">
+            <input type="number" ng-model="editVm.control.imageHeight" ng-disabled="editVm.control.aspectRatio != 'custom'" />
+        </ns-umb-property>
+    </div>
+    
+</div>

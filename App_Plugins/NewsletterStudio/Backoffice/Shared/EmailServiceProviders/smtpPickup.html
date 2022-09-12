@@ -1,0 +1,12 @@
+﻿<div>
+    <label class="control-group ns-label-full">
+        <span>
+            SMTP Pickup Path
+            <small>Defaults to: C:\temp\smtp</small>
+        </span>
+        <span>
+            <input type="text" name="path" ng-model="vm.model.emailServiceProvider.settings.path" ns-server-validation="pathNotExist" />   
+            <ns-validation-error for="path" alias="pathNotExist" key="ns_error_pathDoesNotExist"></ns-validation-error>
+        </span>
+    </label>
+</div>

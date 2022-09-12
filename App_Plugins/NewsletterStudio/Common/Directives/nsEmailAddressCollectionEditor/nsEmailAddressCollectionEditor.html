@@ -1,0 +1,29 @@
+﻿<div class="ns-email-address-collection-editor">
+    <div ng-repeat="address in vm.data">
+        <div>
+            <input type="email" 
+                   ng-model="address.email"
+                   localize="placeholder"
+                   placeholder="@ns_email"
+                   ng-required="address.displayName != ''"
+                   
+            />
+        </div>
+        <div>
+            <input type="text" 
+                   ng-model="address.displayName"
+                   localize="placeholder"
+                   placeholder="@ns_name"
+            />
+        </div>
+        <div>
+            <button ng-click="vm.remove(address)" class="btn btn-danger" ng-if="vm.data.length > 1">
+                <i class="icon icon-remove"></i>
+            </button>
+            <button ng-click="vm.add()" class="btn btn-success" ng-if="$index + 1 == vm.data.length">
+                <i class="icon icon-add"></i>
+            </button>
+        </div>
+    </div>
+    
+</div>

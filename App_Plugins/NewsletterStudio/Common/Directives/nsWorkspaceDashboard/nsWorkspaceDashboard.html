@@ -1,0 +1,195 @@
+﻿<div class="ns-workspace-dashboard">
+    <div>
+        v{{vm.data.packageVersion}}
+    </div>
+    <div class="ns-box ns-workspace-license" ng-if="vm.data.license">
+        <div>
+            
+            <umb-badge size="s" color="warning" ng-if="vm.data.license.status === 'trial'">
+                <localize key="ns_trial"></localize>
+            </umb-badge>
+            <umb-badge size="s" color="danger" ng-if="vm.data.license.status === 'invalid'"
+                       localize="title" title="@ns_dashboard_licenseNotMatchBase">
+                <localize key="ns_licenseInvalid"></localize>
+            </umb-badge>
+            <div ng-if="vm.data.license.status === 'trial'"><localize key="ns_dashboard_upgradeAndAccessFeatures"></localize> €{{vm.data.packagePrice}}</div>
+            <div ng-if="vm.data.license.status === 'invalid'"><localize key="ns_dashboard_licenseInvalid"></localize></div>
+        </div>
+        <div>
+            <a href="{{vm.nsLocation.getViewPath('administration','','')}}" class="btn btn-info" ng-if="vm.data.license.status == 'invalid' && vm.data.userIsAdmin"><localize key="ns_manage"></localize></a>
+            <a href="{{vm.data.license.readMoreLink}}" ng-if="vm.data.license.status=='trial'" target="_blank"><localize key="ns_readMore"></localize></a>
+        </div>
+    </div>
+    
+    <div ng-if="vm.data.workspaceKeys.length == 1">
+        <a href="{{vm.nsLocation.getViewPath('campaign','-1')}}" class="btn btn-outline">
+            <localize key="ns_dashboard_createCampaign"></localize>
+        </a>
+        <a ng-href="{{vm.nsLocation.getViewPath('mailinglist-details','-1')}}" class="btn btn-outline">
+            <localize key="ns_dashboard_createList"></localize>
+        </a>
+    </div>
+    
+    <div ng-if="vm.data">
+        <ns-sending-progress 
+                model="vm.data.emailInProgress" 
+                allowed-workspace-keys="vm.data.workspaceKeys" 
+                on-completed="vm.onProgressCompleted()"
+        >
+        </ns-sending-progress>    
+    </div>
+    
+    <div class="ns-col-2">
+        <div class="ns-workspace-dashboard__campaign_drafts">
+            <h5>
+                <localize key="ns_dashboard_campaignDrafts"></localize>
+            </h5>
+            <div class="ns-table">
+                <div class="ns-table-head">
+                    <div class="ns-table-row">
+                        <div class="ns-table-cell"><localize key="ns_name"></localize></div>
+                        <div class="ns-table-cell"><localize key="ns_created"></localize></div>
+                    </div>
+                </div>
+                <div class="ns-table-body">
+                    <div class="ns-table-row" ng-repeat="campaign in vm.data.latestCampaigns">
+                        <div class="ns-table-cell">
+                            <a href="" ng-click="vm.openDraft(campaign)" prevent-default="">
+                                {{campaign.name}}
+                            </a>
+                        </div>
+                        <div class="ns-table-cell">{{campaign.updated | date : 'short' : 'UTC'}}</div>
+                    </div>
+                    <div class="ns-table-row ns-dashboard-showall" ng-if="vm.data.workspaceKeys.length === 1">
+                        <div class="ns-table-cell">
+                            <a ng-href="{{vm.nsLocation.getViewPath('campaigns',null,vm.workspaceKey)}}">
+                                <localize key="ns_dashboard_showAll"></localize>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ns-workspace-dashboard__latest-campaign">
+            <h5>
+                <localize key="ns_dashboard_latestCampaign"></localize>
+            </h5>
+            <div class="ns-box" ng-if="vm.data.lastSentCampaign">
+                <div>{{vm.data.lastSentCampaign.name}}</div>
+                <div>
+                    <div>
+                        <div style="position: relative;">
+                            <!-- Render chart here-->
+                            <canvas id="base2"
+                                    width="100"
+                                    height="100"
+                                    chart-doughnut
+                                    class="chart chart-doughnut"
+                                    chart-dataset-override="vm.chart2.datasetOverride"
+                                    chart-data="vm.chart2.data" 
+                                    chart-labels="vm.chart2.labels"
+                                    chart-colors="vm.chart2.colors"
+                                    chart-options="vm.chart2.options"
+                                    
+                                    >
+                            </canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <span></span>
+                            <div>
+                                {{vm.data.lastSentCampaign.clicked.percent}}% <localize key="ns_dashboard_openedAndClicked"></localize>
+                                <span>{{vm.data.lastSentCampaign.clicked.items}} <localize key="ns_dashboard_recipients"></localize></span>
+                            </div>
+                        </div>
+                        <div>
+                            <span></span>
+                            <div>
+                                {{vm.data.lastSentCampaign.opened.percent}}% <localize key="ns_dashboard_opened"></localize>
+                                <span>{{vm.data.lastSentCampaign.opened.items}} <localize key="ns_dashboard_recipients"></localize></span>
+                            </div>
+                        </div>
+                        <div>
+                            <span></span>
+                            <div>
+                                {{vm.data.lastSentCampaign.notOpened.percent}}% <localize key="ns_dashboard_notOpened"></localize>
+                                <span>{{vm.data.lastSentCampaign.notOpened.items}} <localize key="ns_dashboard_recipients"></localize></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ns-box__footer">
+                    <a ng-href="{{vm.nsLocation.getViewPath('campaign-report',vm.data.lastSentCampaign.key, vm.data.lastSentCampaign.workspaceKey)}}">
+                        <localize key="ns_dashboard_detailedReport"></localize>
+                    </a>
+                </div>
+            </div>
+        </div>    
+    </div>
+    <div class="ns-col-2 ns-dashboard-subscriber-growth">
+        <div>
+            <h5>
+                <localize key="ns_dashboard_subscriberGrowth"></localize>
+            </h5>
+            <div class="ns-box" >
+                <p>
+                    <localize key="ns_dashboard_last7days"></localize>
+                </p>
+                <div>
+                    <div style="position: relative; max-height:300px; height:300px;">
+                        <canvas id="base"
+                                class="chart-bar"
+                                chart-bar
+                                chart-options="vm.chart.options"
+                                chart-data="vm.chart.data" 
+                                chart-labels="vm.chart.labels" 
+                                chart-colors="vm.chart.colors"
+                                chart-dataset-override="vm.chart.datasetOverride" >
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            
+            <h5>
+                <localize key="ns_dashboard_lastMonth"></localize>
+            </h5>
+            <div class="ns-table">
+                
+                <div class="ns-table-body">
+                    <div class="ns-table-row">
+                        <div class="ns-table-cell">
+                            <localize key="ns_dashboard_sentCampaigns"></localize>
+                        </div>
+                        <div class="ns-table-cell">
+                            {{vm.data.lastMonthSentCampaignsCount}}
+                        </div>
+                    </div>
+                    <div class="ns-table-row">
+                        <div class="ns-table-cell">
+                            <localize key="ns_dashboard_newRecipients"></localize>
+                        </div>
+                        <div class="ns-table-cell">
+                            {{vm.data.lastMonthNewRecipientsCount}}
+                        </div>
+                    </div>
+                    <div class="ns-table-row">
+                        <div class="ns-table-cell">
+                            <localize key="ns_dashboard_unsubscribed"></localize>
+                        </div>
+                        <div class="ns-table-cell">
+                            {{vm.data.lastMonthUnsubscribedCount}}
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>    
+    </div>
+    
+    <div style="clear:both;"><br/></div>
+    
+</div>

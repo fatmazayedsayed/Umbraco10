@@ -1,0 +1,16 @@
+﻿<div class="ns-sending-progress" ng-if="vm.model.campaignName && vm.model.campaignName != ''">
+    <h5>
+        <localize key="ns_sendingProgress_currentlySending"></localize>
+    </h5>
+    <div class="ns-box">
+        <div>
+            <localize key="ns_name"></localize>: {{vm.model.campaignName}}    
+        </div>
+        <div class="ns-progress">
+            <span>
+                {{vm.model.processedItems}} / {{vm.model.totalItems}}
+            </span>
+            <div style="width:{{vm.model.processedPercent}}%"></div>
+        </div>
+    </div>
+</div>

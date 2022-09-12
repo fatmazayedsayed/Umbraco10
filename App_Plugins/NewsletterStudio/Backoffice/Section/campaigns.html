@@ -1,0 +1,45 @@
+﻿<div class="ns-content-wrapper ns-campaigns-overview" ng-controller="NewsletterStudio.Controllers.CampaignsController as vm">
+
+    <div class="ns-content-header">
+        <a href="#/newsletterStudio/section/campaign/{{vm.workspaceKey}}?e=-1" class="btn btn-outline">
+            <localize key="ns_campaigns_createNew"></localize>
+        </a>
+    </div>
+    
+    <div class="ns-content ns-content--full-height">
+        <div>
+            <div>
+                <button class="btn" ng-click="vm.setFilter('all')" ng-class="{'btn-action' : vm.filter.filterState=='all'}"><localize key="ns_all"></localize></button>
+                <button class="btn" ng-click="vm.setFilter('draft')" ng-class="{'btn-action' : vm.filter.filterState=='draft'}"><localize key="ns_draft"></localize></button>
+                <button class="btn" ng-click="vm.setFilter('scheduled')" ng-class="{'btn-action' : vm.filter.filterState=='scheduled'}"><localize key="ns_scheduled"></localize></button>
+                <button class="btn" ng-click="vm.setFilter('sent')" ng-class="{'btn-action' : vm.filter.filterState=='sent'}"><localize key="ns_sent"></localize></button>
+                <button class="btn" ng-click="vm.setFilter('byme')" ng-class="{'btn-action' : vm.filter.filterState=='byme'}"><localize key="ns_byMe"></localize></button>
+            </div>
+            <div>
+                <input type="text"
+                       localize="placeholder"
+                       placeholder="@placeholders_filter"
+                       ng-model="vm.filter.search"
+                       ng-change="vm.setSearch()"
+                       prevent-enter-submit
+                       no-dirty-check>
+            </div>
+        </div>
+ 
+        <div class="ns-box-list ns-box-list-campaigns">
+            
+            <div ng-repeat="campaign in vm.data.campaigns.items track by campaign.id" ng-include="'/app_plugins/NewsletterStudio/Common/Partials/nsCampaignListItem.partial.html'">
+            </div>
+
+        </div>
+
+        <umb-pagination page-number="vm.data.campaigns.currentPage"
+                        total-pages="vm.data.campaigns.totalPages"
+                        on-next="vm.nextPage"
+                        on-prev="vm.prevPage"
+                        on-go-to-page="vm.goToPage">
+        </umb-pagination>
+        
+    </div>
+   
+</div>

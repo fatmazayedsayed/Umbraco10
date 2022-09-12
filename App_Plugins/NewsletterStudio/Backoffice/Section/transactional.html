@@ -1,0 +1,448 @@
+﻿<div ng-controller="NewsletterStudio.Controllers.TransactionalController as vm" class="ns-content-wrapper ns-transactional-edit">
+
+    <style ng-if="vm.showEditor">
+        /* Removes the menu to the left. Can't be hidden with z-index. */
+        #leftcolumn {
+            display: none;
+        }
+        /* Makes notification span the whole screen, otherwise it starts where the left-menu ends */
+        .umb-notifications {
+            left: 0 !important;
+        }
+    </style>
+    
+    <div ng-if="vm.data && vm.data.details.key === '-1'" class="ns-create-new" style="width:100%">
+
+        <form name="createNewTransactional" ng-submit="vm.createNew(createNewTransactional)" val-form-manager novalidate>
+            <div class="ns-box">
+
+                <div>
+                    <h2>
+                        <localize key="ns_transactional_createHeader"></localize>
+                    </h2>
+                </div>
+                <div>
+                    <div class="control-group">
+                        <label>
+                            <input type="text" ng-model="vm.newName" localize="placeholder" placeholder="@ns_enterNewName" required="" />
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-success btn-large">
+                        <localize key="ns_create"></localize>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div ng-if="vm.data && vm.data.details && vm.data.details.key !== '-1'" class="ns-content-wrapper">
+        
+        <div class="ns-content-header ns-content-header-with-tabs">
+            <div class="ns-content-header-info ns-content-header-container">
+                <div class="ns-content-header-left">
+                    <a href="" onclick="history.back(-1)" class="ns-backbutton"><i class="icon-arrow-left"></i></a>
+                    <input type="text" ng-model="vm.data.details.name" required="" />
+                </div>
+                <div class="ns-content-header-right">
+
+                    <div class="btn-group">
+                        <a class="btn btn-link" ng-click="vm.showActionMenu = !vm.showActionMenu" data-elm="ml-actions">
+                            <span><localize key="ns_actions"></localize></span>
+                            <span class="caret"></span>
+                        </a>
+                        <umb-dropdown ng-if="vm.showActionMenu" on-close="campaign.showActionMenu = false" class="ns-dropdown-to-right">
+                            
+                            <umb-dropdown-item>
+                                <a ng-click="vm.removeEmail()" data-elm="ml-actions-remove">
+                                    <localize key="ns_remove"></localize> 
+                                </a>
+                            </umb-dropdown-item>
+
+                        </umb-dropdown>
+                    </div>
+
+                </div>
+            </div>
+            <div class="ns-content-header-tabs">
+                <ul>
+                    <li ng-class="{'selected' : vm.activeTab == 'email'}" 
+                        ng-click="vm.setActiveTab('email')"
+                    >
+                        <localize key="ns_transactional_tabEmail"></localize>
+                    </li>
+                    <li ng-class="{'selected' : vm.activeTab == 'settings'}" ng-click="vm.setActiveTab('settings')">
+                        <localize key="ns_transactional_tabSettings"></localize>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div ng-if="vm.activeTab=='email'" class="ns-content">
+            <div>
+                <ns-transactional-log ng-if="vm.data" transactional-email-id="vm.data.transactionalEmailId" log="vm.data.log"></ns-transactional-log>
+            </div>
+        </div>
+        <div ng-if="vm.activeTab=='settings'" class="ns-content">
+            
+            <form name="vm.formSettings" val-form-manager novalidate>
+                <div class="ns-section ns-transactional-edit__section-design">
+                    <div class="ns-section-header">
+                        <h5>
+                            <localize key="ns_transactional_emailDesign"></localize>
+                        </h5>
+                    </div>
+                    <div class="ns-box">
+                        <div>
+                            <div>
+                                <localize key="ns_transactional_emailDesignInfo"></localize>
+                            </div>
+                            <div>
+                                <button class="btn btn-success" ng-click="vm.openDesigner()" ng-disabled="vm.formSettings.$invalid">Design Email</button>
+                            </div>    
+                        </div>
+                        <div>
+                            <i class="icon icon-layout"></i>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="ns-section">
+                    <div class="ns-section-header">
+                        <h5><localize key="ns_transactional_recipientSettings"></localize></h5>
+                    </div>
+                    <div class="ns-box">
+                        <p>
+                            <localize key="ns_transactional_recipientSettingsInfo"></localize>
+                        </p>
+                        
+                        <div class="control-group">
+                            <label><span><localize key="ns_to"></localize></span></label>
+                            <ns-email-address-collection-editor ng-model="vm.data.details.to"></ns-email-address-collection-editor>    
+                        </div>
+                        
+                        <div class="control-group">
+                            <label><span><localize key="ns_cc"></localize></span></label>
+                            <ns-email-address-collection-editor ng-model="vm.data.details.cc"></ns-email-address-collection-editor>    
+                        </div>
+                        
+                        <div class="control-group">
+                            <label><span><localize key="ns_bcc"></localize></span></label>
+                            <ns-email-address-collection-editor ng-model="vm.data.details.bcc"></ns-email-address-collection-editor>    
+                        </div>
+    
+                    </div>
+                </div>
+    
+                <div class="ns-section">
+                    <div class="ns-section-header">
+                        <h5>
+                            <localize key="ns_transactional_settingHeadline"></localize>
+                        </h5>
+                    </div>
+                    <div class="ns-box">
+                        <label class="ns-label-full">
+                            <span>
+                                <localize key="ns_transactional_enableLogging"></localize>
+                                <small><localize key="ns_transactional_enableLoggingInfo"></localize></small>
+                            </span>
+                            <span>
+                                <input type="checkbox" ng-model="vm.data.details.enableLogging" />
+                            </span>
+                        </label>
+                        <label class="ns-label-full" ng-show="vm.data.details.enableLogging">
+                            <span>
+                                <localize key="ns_transactional_logExpiry"></localize>
+                                <small><localize key="ns_transactional_logExpiryInfo"></localize></small>
+                            </span>
+                            <span>
+                                <ns-days-picker ng-model="vm.data.details.logExpiryDays"></ns-days-picker>
+                            </span>
+                        </label>
+                        <label class="ns-label-full" ng-show="vm.data.details.enableLogging">
+                            <span>
+                                <localize key="ns_transactional_storeEmailContent"></localize>
+                                <small><localize key="ns_transactional_storeEmailContentInfo"></localize></small>
+                            </span>
+                            <span>
+                                <input type="checkbox" ng-model="vm.data.details.storeEmailContent" />
+                            </span>
+                        </label>
+                        <label class="ns-label-full" ng-show="vm.data.details.enableLogging && vm.data.details.storeEmailContent">
+                            <span>
+                                <localize key="ns_transactional_storedEmailContentExpiry"></localize>
+                                <small><localize key="ns_transactional_storedEmailContentExpiryInfo"></localize></small>
+                            </span>
+                            <span>
+                                <ns-days-picker ng-model="vm.data.details.storedEmailExpiryInDays"></ns-days-picker>
+                            </span>
+                        </label>
+                        <label class="ns-label-full">
+                            <span>
+                                <localize key="ns_transactional_enableTracking"></localize>
+                                <small><localize key="ns_transactional_enableTrackingInfo"></localize></small>
+                            </span>
+                            <span>
+                                <input type="checkbox" ng-model="vm.data.details.enableTracking" />
+                            </span>
+                        </label>
+                        <label class="ns-label-full">
+                            <span>
+                                <localize key="ns_transactional_sendIndividualEmails"></localize>
+                                <small><localize key="ns_transactional_sendIndividualEmailsInfo"></localize></small>
+                            </span>
+                            <span>
+                                <input type="checkbox" ng-model="vm.data.details.sendIndividualEmails" />
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+        
+        <div class="ns-toolbox">
+            <umb-button
+                    type="button"
+                    button-style="success"
+                    state="vm.btnSave.state"
+                    label-key="ns_save"
+                    action="vm.save()">
+            </umb-button>
+        </div>
+        
+    </div>
+
+    <div class="ns-ca-campaign ns-fullscreen-editor ns-campaign-editor" ng-if="vm.showEditor">
+
+        <div class="ns-content-wrapper">
+
+            <div class="ns-steps-progress-bar">
+                <ul>
+                    <li ng-click="vm.toStep1()" ng-class="{'current' : vm.currentStep == 1, 'done' : vm.currentStep > 1}">
+                        <span>
+                            <i class="icon icon-notepad-alt"></i>
+                        <span>
+                            <localize key="ns_information"></localize>
+                        </span>
+                        <span class="small-circle"><i class="icon icon-check"></i></span>
+                        </span>
+                    </li>
+                    <li class="ns-divider"></li>
+                    <li ng-click="vm.toStep2()" ng-class="{'current' : vm.currentStep == 2, 'done' : vm.currentStep > 2}">
+                        <span>
+                            <i class="icon icon-layout"></i>
+                            <span>
+                                <localize key="ns_content"></localize>
+                            </span>
+                            <span class="small-circle"><i class="icon icon-check"></i></span>
+                        </span>
+                    </li>
+                    <li class="ns-divider"></li>
+                    <li ng-click="vm.toStep3()" ng-class="{'current' : vm.currentStep == 3, 'done' : vm.currentStep > 3}">
+                        <span>
+                            <i class="icon icon-display"></i>
+                            <span>
+                                <localize key="ns_preview"></localize>
+                            </span>
+                            <span class="small-circle"><i class="icon icon-check"></i></span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="ns-campaign-editor__steps" ng-if="vm.data.details">
+                <div class="ns-campaign-editor__step-info" ng-show="vm.currentStep == 1">
+                    <div>
+                        <form name="vm.formInformation" val-form-manager novalidate>
+
+                            <label class="control-group control-group-wide">
+                                <div>
+                                    <span><localize key="ns_subject"></localize> <strong class="umb-control-required">*</strong></span>    
+                                </div>
+                                <div>
+                                    <input name="subject" type="text" ng-model="vm.data.details.subject" required="" />
+                                    <ns-validation-error for="subject" alias="required" key="ns_validationCampaignSubjectRequired"></ns-validation-error>    
+                                </div>
+                            </label>
+
+                            <label class="control-group control-group-wide">
+                                <div>
+                                    <span><localize key="ns_sender"></localize> <strong class="umb-control-required">*</strong></span>    
+                                </div>
+                                <div class="two-cols">
+                                    <div>
+                                        <input name="senderEmail" type="email" ng-model="vm.data.details.sender.email" required="" placeholder="email@domain.com" />
+                                        <ns-validation-error for="senderEmail" alias="email" key="ns_validationCampaignSenderEmailValid"></ns-validation-error>
+                                        <ns-validation-error for="senderEmail" alias="required" key="ns_validationCampaignSenderEmailRequired"></ns-validation-error>
+                                    </div>
+                                    <div>
+                                        <input name="senderName" type="text" ng-model="vm.data.details.sender.displayName" placeholder="John Doe" />
+                                        <ns-validation-error for="senderName" alias="required" key="ns_validationCampaignSenderNameRequired"></ns-validation-error>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="control-group control-group-wide">
+                                <div>
+                                    <span><localize key="ns_replyTo"></localize></span>
+                                    <small><localize key="ns_transactional_replyToInformation"></localize></small>
+                                </div>
+                                <div class="two-cols">
+                                    <div>
+                                        <input name="replyToEmail" type="email" ng-model="vm.data.details.replyTo.email" placeholder="email@domain.com" />
+                                        <ns-validation-error for="replyToEmail" alias="email" key="ns_validationCampaignSenderEmailValid"></ns-validation-error>
+                                    </div>
+                                    <div>
+                                        <input name="replyToName" type="text" ng-model="vm.data.details.replyTo.displayName" placeholder="John Doe" />
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="control-group control-group-wide">
+                                <div>
+                                    <span><localize key="ns_previewText"></localize></span>
+                                    <small><localize key="ns_previewText__desc"></localize></small>
+                                </div>
+                                <div>
+                                    <ns-textarea-counter ng-model="vm.data.details.content.previewText" recommended-length="98"></ns-textarea-counter>
+                                </div>
+                            </label>
+
+                            <label class="control-group control-group-wide">
+                                <div>
+                                    <span><localize key="ns_theme">Theme</localize></span>
+                                </div>
+                                <div>
+                                    <select name="" ng-model="vm.data.details.themeAlias" ng-change="vm.setCurrentTheme()" required class="ns-select">
+                                        <option ng-repeat="option in vm.data.themes" ng-value="option.alias">{{option.alias}}</option>
+                                    </select>
+                                </div>
+                            </label> 
+                            <label class="control-group control-group-wide">
+                                <div>
+                                    <span><localize key="ns_transactional_dataModel"></localize></span>
+                                    <small><localize key="ns_transactional_dataModelInformation"></localize></small>
+                                </div>
+                                <div>
+                                    <select name="typedModel" ng-model="vm.data.details.typedModelAlias" ng-change="vm.loadMergeFieldsForCurrentSelection()" class="ns-select">
+                                        <optgroup label="{{group.label}}" ng-repeat="group in vm.data.mergeFieldModels">
+                                            <option value="{{option.value}}" ng-repeat="option in group.options">{{option.label}}</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </label>
+
+                            <div class="center-container">
+                                <umb-button
+                                        type="button"
+                                        button-style="success"
+                                        state="vm.btnToStep2State"
+                                        label-key="ns_nextStep"
+                                        action="vm.toStep2()">
+                                </umb-button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="ns-step-2" ng-if="vm.currentStep == 2">
+                    <div>
+                        <ns-email-editor email="vm.data.details.content"
+                                         control-types="vm.data.controlTypes"
+                                         toolbox-controls="vm.data.editorToolboxControls"
+                                         fonts="vm.data.fonts"
+                                         theme="vm.selectedTheme">
+                        </ns-email-editor>
+                    </div>
+                </div>
+
+                <div class="ns-campaign-editor__step-preview" ng-if="vm.currentStep == 3">
+
+                    <div>
+
+                        <div class="ns-email-preview" ng-class="{'ns-email-preview-desktop' : vm.previewWidth == 900, 'ns-email-preview-mobile' : vm.previewWidth == 350}">
+                            <ns-preview-iframe src="vm.getPreviewUrl()"></ns-preview-iframe>
+                        </div>
+
+                    </div>
+                    <div class="ns-nice-scroll">
+
+                        <div class="ns-device-buttons">
+                            <button type="button" ng-click="vm.previewWidth=900" ng-class="{'ns-selected' : vm.previewWidth == 900}">
+                                <i class="icon icon-display"></i>
+                                <localize key="ns_desktop"></localize>
+                            </button>
+                            <button type="button" ng-click="vm.previewWidth=350" ng-class="{'ns-selected' : vm.previewWidth == 350}">
+                                <i class="icon icon-display"></i>
+                                <localize key="ns_mobile"></localize>
+                            </button>
+                        </div>
+                        <hr/>
+
+                        <form val-form-manager novalidate>
+                            <label>
+                                <span><localize key="ns_sender"></localize>:</span>
+                                <p>{{vm.data.details.sender.displayName}} &lt;{{vm.data.details.sender.email}}&gt;<br/></p>
+                            </label>
+                            <label>
+                                <span><localize key="ns_subject"></localize>:</span>
+                                <p>{{vm.data.details.subject}}</p>
+                            </label>
+
+                        </form>
+
+                        <hr/>
+                        <div class="ns-preview-sendtest">
+                            <form>
+                                <label>
+                                <span>
+                                    <localize key="ns_campaignEdit_sendTestEmail"></localize>
+                                </span>
+                                    <input type="email" placeholder="@ns_campaignEdit_enterEmail" localize="placeholder" ng-model="vm.previewSendTestToEmail" required />
+                                </label>
+                                <umb-button
+                                        type="button"
+                                        button-style="success"
+                                        state="vm.btnSendTestEmail.state"
+                                        shortcut="ctrl+s"
+                                        label-key="ns_campaignEdit_sendTestEmail"
+                                        action="vm.sendTestEmail()">
+                                </umb-button>
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+               
+            </div>
+            <div class="ns-fullscreen-editor__footer">
+                <div>
+                    <button type="button" ng-click="vm.closeEditor()" class="btn btn-link">
+                        <localize key="ns_close"></localize>
+                    </button>
+
+                    <umb-button
+                            type="button"
+                            button-style=""
+                            state="vm.btnSaveAndCloseState"
+                            label-key="ns_saveAndClose"
+                            action="vm.saveAndCloseEditor()">
+                    </umb-button>
+                    <umb-button
+                            type="button"
+                            button-style="success"
+                            state="vm.btnSave.state"
+                            shortcut="ctrl+s"
+                            label-key="ns_save"
+                            action="vm.save()"
+                            size=""
+                            icon=""
+                            add-ellipsis="false">
+                    </umb-button>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>

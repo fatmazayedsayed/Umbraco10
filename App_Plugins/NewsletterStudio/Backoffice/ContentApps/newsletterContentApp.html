@@ -1,0 +1,346 @@
+﻿<div ng-controller="NewsletterStudio.Controllers.ContentAppController as vm" class="ns-content-app">
+    
+    <style ng-if="vm.showEditor">
+        /* Removes the menu to the left. Can't be hidden with z-index. */
+        #leftcolumn {
+            display: none;
+        }
+        /* Makes notification span the whole screen, otherwise it starts where the left-menu ends */
+        .umb-notifications {
+            left: 0 !important;
+        }
+    </style>
+
+    <div class="ns-content-app__overview" ng-if="vm.showAnalytics == false && vm.showEditor == false">
+        
+        <div>
+            <umb-button
+                    type="button"
+                    button-style="success"
+                    state="vm.btnCreateState"
+                    label-key="ns_contentApp_createNewCampaign"
+                    action="vm.showEmailEditor()">
+            </umb-button>
+        </div>
+        
+        <div ng-if="vm.overview">
+            <ns-sending-progress 
+                    model="vm.overview.emailInProgress" 
+                    allowed-workspace-keys="vm.overview.workspaceKeys" 
+                    content-key="vm.contentKey" 
+                    on-completed="vm.onProgressCompleted()"
+            >
+            </ns-sending-progress>
+        </div>
+        
+        <div ng-if="vm.overview.drafts.length > 0 || vm.overview.sent.length > 0">
+            <div ng-if="vm.overview.drafts.length > 0">
+                <h3><localize key="ns_draft"></localize></h3>
+                <div class="ns-box-list ns-box-list-campaigns">
+                    <div ng-repeat="campaign in vm.overview.drafts" ng-include="'/app_plugins/NewsletterStudio/Common/Partials/nsCampaignListItem.partial.html'">
+                    </div>    
+                </div>
+            </div>
+            <div ng-if="vm.overview.sent.length > 0">
+                <h3><localize key="ns_sent"></localize></h3>
+                <div class="ns-box-list ns-box-list-campaigns">
+                    <div ng-repeat="campaign in vm.overview.sent" ng-include="'/app_plugins/NewsletterStudio/Common/Partials/nsCampaignListItem.partial.html'">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div ng-if="vm.showAnalytics">
+        <div style="position: absolute; right:20px;top:10px;z-index:5;" ng-click="vm.closeAnalytics()">
+            <button type="button" class="btn btn-action">Close Report</button>
+        </div>
+        <ns-campaign-report
+                
+                display-header="false"
+                workspace-key="vm.analyticsWorkspaceKey"
+                campaign-key="vm.analyticsCampaignKey">
+        </ns-campaign-report>     
+    </div>
+    
+   
+    
+    <div class="ns-ca-campaign ns-fullscreen-editor ns-campaign-editor" ng-if="vm.showEditor"> 
+    
+        <div class="ns-content-wrapper">
+        
+        <div class="ns-steps-progress-bar">
+            <ul>
+                <li ng-click="vm.toStep1()" ng-class="{'current' : vm.currentStep == 1, 'done' : vm.currentStep > 1}">
+                    <span>
+                        <i class="icon icon-notepad-alt"></i>
+                        <span>
+                            <localize key="ns_information">Information</localize>
+                        </span>
+                        <span class="small-circle"><i class="icon icon-check"></i></span>
+                    </span>
+                </li>
+               
+                <li class="ns-divider"></li>
+                <li ng-click="vm.toStep2()" ng-class="{'current' : vm.currentStep == 2, 'done' : vm.currentStep > 2}">
+                    <span>
+                        <i class="icon icon-display"></i>
+                        <span>
+                            <localize key="ns_preview">Preview</localize>
+                        </span>
+                        <span class="small-circle"><i class="icon icon-check"></i></span>
+                    </span>
+                </li>
+    
+                <li class="ns-divider"></li>
+    
+                <li ng-click="vm.toStep3()" ng-class="{'current' : vm.currentStep == 3}">
+                    <span>
+                        <i class="icon icon-outbox"></i>
+                        <span>
+                            <localize key="ns_send">Send</localize>
+                        </span>
+                        <span class="small-circle"><i class="icon icon-check"></i></span>
+                    </span>
+                </li>
+                
+            </ul>
+        </div>
+        
+        <div class="ns-campaign-editor__steps" ng-if="vm.data.campaign">
+            <div class="ns-campaign-editor__step-info" ng-show="vm.currentStep == 1">
+                <div>
+                    <form name="vm.formInformation" val-form-manager novalidate>
+
+                        <div class="alert alert-warning" ng-if="vm.sendType == 'schedule'">
+                            <i class="icon icon-time"></i> <localize key="ns_campaignEdit_campaignIsScheduled"></localize>
+                        </div>
+
+                        <label class="control-group control-group-wide">
+                            <div>
+                                <span><localize key="ns_campaignName">Campaign Name (fall)</localize> <strong class="umb-control-required">*</strong></span>    
+                            </div>
+                            <div>
+                                <input name="name" type="text" ng-model="vm.data.campaign.name" required />
+                                <ns-validation-error for="name" alias="required" key="ns_validationGenericNameRequired"></ns-validation-error>
+                            </div>
+                        </label>
+                        
+                        <label class="control-group control-group-wide">
+                            <div>
+                                <span><localize key="ns_workspace">Workspace</localize> <strong class="umb-control-required">*</strong></span>    
+                            </div>
+                            <div>
+                                <select name="workspace" ng-model="vm.data.campaign.workspaceKey" ng-change="vm.setWorkspace()" required="" class="ns-select">
+                                    <option value="">--- Choose workspace ---</option>
+                                    <option ng-repeat="option in vm.data.workspaces" ng-value="option.key">{{option.name}}</option>
+                                </select>
+                                <ns-validation-error for="workspace" alias="required" key="ns_validationWorkspaceIsRequired"></ns-validation-error>
+                            </div>
+                        </label>
+                        
+                        <label class="control-group control-group-wide">
+                            <div>
+                                <span><localize key="ns_campaignSubject">Campaign Subject</localize> <strong class="umb-control-required">*</strong></span>
+                            </div>
+                            <div>
+                                <input name="subject" type="text" ng-model="vm.data.campaign.subject" required="" />
+                                <ns-validation-error for="subject" alias="required" key="ns_validationCampaignSubjectRequired"></ns-validation-error>    
+                            </div>
+                        </label>
+                        <label class="control-group control-group-wide" ng-if="!vm.data.defaultSenderForce">
+                            <div>
+                                <span><localize key="ns_senderName">Sender Name</localize> <strong class="umb-control-required">*</strong></span>    
+                            </div>
+                            <div>
+                                <input name="senderName" type="text" ng-model="vm.data.campaign.senderName" required="" />
+                                <ns-validation-error for="senderName" alias="required" key="ns_validationCampaignSenderNameRequired"></ns-validation-error>    
+                            </div>
+                        </label>
+                        <label class="control-group control-group-wide" ng-if="!vm.data.defaultSenderForce">
+                            <div>
+                                <span><localize key="ns_senderEmail">Sender e-mail</localize> <strong class="umb-control-required">*</strong></span>    
+                            </div>
+                            <div>
+                                <input name="senderEmail" type="email" ng-model="vm.data.campaign.senderEmail" required="" />
+                                <ns-validation-error for="senderEmail" alias="email" key="ns_validationCampaignSenderEmailValid"></ns-validation-error>
+                                <ns-validation-error for="senderEmail" alias="required" key="ns_validationCampaignSenderEmailRequired"></ns-validation-error>    
+                            </div>
+                        </label>
+                        
+                        <div class="center-container">
+                            <umb-button
+                                    type="button"
+                                    button-style="success"
+                                    state="vm.btnToStep2State"
+                                    label-key="ns_nextStep"
+                                    action="vm.toStep2(vm.formInformation)">
+                            </umb-button>
+                            
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="ns-campaign-editor__step-preview" ng-if="vm.currentStep == 2">
+    
+                <div>
+    
+                    <div class="ns-email-preview" ng-class="{'ns-email-preview-desktop' : vm.previewWidth == 900, 'ns-email-preview-mobile' : vm.previewWidth == 350}">
+                        <ns-preview-iframe src="vm.getPreviewUrl()"></ns-preview-iframe>
+                    </div>
+    
+                </div>
+                <div class="ns-nice-scroll">
+    
+                    <div class="ns-device-buttons">
+                        <button type="button" ng-click="vm.previewWidth=900" ng-class="{'ns-selected' : vm.previewWidth == 900}">
+                            <i class="icon icon-display"></i>
+                            <localize key="ns_desktop"></localize>
+                        </button>
+                        <button type="button" ng-click="vm.previewWidth=350" ng-class="{'ns-selected' : vm.previewWidth == 350}">
+                            <i class="icon icon-display"></i>
+                            <localize key="ns_mobile"></localize>
+                        </button>
+                    </div>
+                    <hr/>
+    
+                    <form val-form-manager novalidate>
+                        <label>
+                            <span><localize key="ns_sender"></localize>:</span>
+                            <p>{{vm.data.campaign.senderName}} &lt;{{vm.data.campaign.senderEmail}}&gt;<br/></p>
+                        </label>
+                        <label>
+                            <span><localize key="ns_subject"></localize>:</span>
+                            <p>{{vm.data.campaign.subject}}</p>
+                        </label>
+                        
+                    </form>
+    
+                    <hr/>
+                    <div class="ns-preview-sendtest">
+                        <form>
+                            <label>
+                                <span>
+                                    <localize key="ns_campaignEdit_sendTestEmail"></localize>
+                                </span>
+                                <input type="email" placeholder="@ns_campaignEdit_enterEmail" localize="placeholder" ng-model="vm.previewSendTestToEmail" required />
+                            </label>
+                            <umb-button
+                                    type="button"
+                                    button-style="success"
+                                    state="vm.btnSendTestState"
+                                    shortcut="ctrl+s"
+                                    label-key="ns_campaignEdit_sendTestEmail"
+                                    action="vm.sendTestEmail()">
+                            </umb-button>
+                        </form>
+    
+                    </div>
+    
+                </div>
+    
+            </div>
+            <div class="ns-campaign-editor__step-send" ng-show="vm.currentStep == 3">
+    
+                <div>
+                    <form name="vm.formSend" val-form-manager>
+                        <div class="ns-panel">
+                            <div>
+                                <localize key="ns_recipients"></localize>
+                            </div>
+                            <div>
+                                <ns-recipient-list-picker
+                                        name="recipientLists"
+                                        ng-model="vm.data.campaign.recipientLists"
+                                        workspace-key="vm.data.campaign.workspaceKey"
+                                        ng-required="vm.triedToSend"
+                                >
+                                </ns-recipient-list-picker>
+                                <ns-validation-error for="recipientLists" alias="required" key="ns_validationCampaignRecipientsRequired"></ns-validation-error>
+                            </div>
+                        </div>
+    
+                        <div class="ns-panel ns-panel-sendout">
+                            <div>
+                                <localize key="ns_campaignEdit_sendOptions"></localize>
+                            </div>
+                            <div>
+
+                                <div ng-if="!vm.data.sendingValidation.userHasSendingPermissions" class="alert alert-error">
+                                    <localize key="ns_campaignEdit_noSendPermissions"></localize>
+                                </div>
+                                <div ng-if="vm.data.sendingValidation.hasWorkspaceValidationIssues" class="alert alert-error">
+                                    <localize key="ns_campaignEdit_workspaceValidationErrors"></localize>
+                                </div>
+                                <div ng-if="!vm.data.sendingValidation.hasValidLicense" class="alert alert-warning">
+                                    <localize key="ns_campaignEdit_noValidLicense"></localize>
+                                </div>
+
+                                <div ng-if="vm.data.sendingValidation.userHasSendingPermissions && !vm.data.sendingValidation.hasWorkspaceValidationIssues">
+                                    <label>
+                                        <input type="radio" name="when" value="now" ng-model="vm.sendType" /> <localize key="ns_campaignEdit_sendNow"></localize>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="when" value="schedule" ng-model="vm.sendType" /> <localize key="ns_campaignEdit_scheduleFor"></localize>
+                                    </label>
+                                    <div ng-show="vm.sendType === 'schedule'">
+                                        <umb-property-editor model="vm.dateTimeProperty">
+                                        </umb-property-editor>
+                                    </div>
+        
+                                    <button type="button" class="btn btn-success" ng-click="vm.saveAndSendOrSchedule()" ng-if="vm.sendType">
+                                        <span ng-if="vm.sendType=='schedule'"><localize key="ns_campaignEdit_schedule"></localize></span>
+                                        <span ng-if="vm.sendType=='now'"><localize key="ns_campaignEdit_sendNow"></localize></span>
+                                    </button>
+                                    <button type="button" class="btn btn-danger" ng-click="vm.cancelScheduledSendOut()" ng-if="vm.sendType=='schedule'">
+                                        <localize key="ns_campaignEdit_cancelScheduled"></localize>
+                                    </button>
+                                </div>
+                                <div ng-if="vm.validationErrors && vm.validationErrors.length > 0" class="alert alert-error ns-alert-error">
+                                    <div ng-click="vm.resetValidationErrors()">x</div>
+                                    <localize key="ns_campaignEdit_validationHeader"></localize> 
+                                    <ul>
+                                        <li ng-repeat="error in vm.validationErrors">
+                                            <localize key="{{error.localizationKey}}"></localize>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+    
+            </div>
+        </div>
+        <div class="ns-fullscreen-editor__footer">
+            <div>
+                <button type="button" ng-click="vm.close()" class="btn btn-link">
+                    <localize key="ns_close">Close</localize>
+                </button>
+
+                <umb-button
+                        type="button"
+                        button-style=""
+                        state="vm.btnSaveAndCloseState"
+                        label-key="ns_saveAndClose"
+                        action="vm.saveAndClose()">
+                </umb-button>
+                <umb-button
+                        type="button"
+                        button-style="success"
+                        state="vm.btnSaveState"
+                        shortcut="ctrl+s"
+                        label-key="ns_save"
+                        action="vm.save()"
+                        size=""
+                        icon=""
+                        add-ellipsis="false">
+                </umb-button>
+            </div>
+        </div>
+    </div>
+    
+   
+    </div>
+</div>

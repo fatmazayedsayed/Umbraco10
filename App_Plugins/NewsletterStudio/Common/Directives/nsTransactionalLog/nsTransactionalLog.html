@@ -1,0 +1,94 @@
+﻿<div class="ns-transactional-log">
+    
+    <div class="ns-lists">
+        <div class="ns-infobox">
+            <span><localize key="ns_transactional_log_total"></localize></span>
+            <div>
+                <p>{{vm.log.sentTotal | number}}</p>
+                <small><localize key="ns_transactional_log_total_info"></localize></small>
+            </div>
+        </div>
+        <div class="ns-infobox">
+            <span><localize key="ns_transactional_log_lastWeek"></localize></span>
+            <div>
+                <p>{{vm.log.sentLastWeek| number}}</p>
+                <small><localize key="ns_transactional_log_lastWeek_info"></localize></small>
+            </div>
+        </div>
+        <div class="ns-infobox">
+            <span><localize key="ns_transactional_log_lastMonth"></localize></span>
+            <div>
+                <p>{{vm.log.sentLast3Months | number}}</p>
+                <small><localize key="ns_transactional_log_lastMonth_info"></localize></small> 
+            </div>
+        </div>
+    </div>
+
+    <div class="ns-table-filters">
+        <input type="text"
+               ng-model="vm.log.emails.filters.search"
+               localize="placeholder"
+               placeholder="@ns_filterByEmailOrName"
+               ng-change="vm.updatePagedList(1)"
+               ng-model-options="{ debounce: 350 }" />
+        
+        <div class="btn-group">
+            <a class="btn btn-link" ng-click="vm.showFilterMenu = !vm.showFilterMenu">
+                <span><localize key="ns_status"></localize>:</span>
+                <span class="truncate bold">{{vm.selectedFilterText}}</span>
+                <span class="caret"></span>
+            </a>
+            <umb-dropdown ng-if="vm.showFilterMenu" on-close="campaign.showActionMenu = false" class="ns-dropdown-to-right">
+                <umb-dropdown-item ng-repeat="opt in vm.log.logItemStatuses">
+                    <a ng-click="vm.setStatusFilter(opt);vm.showFilterMenu = !vm.showFilterMenu">
+                        <localize key="{{opt.localizationKey}}"></localize>
+                    </a>
+                </umb-dropdown-item>
+
+            </umb-dropdown>
+        </div>
+
+    </div>
+
+    <div class="ns-table ns-table-recipients">
+
+        <div class="ns-table-head">
+            <div class="ns-table-row">
+                <div class="ns-table-cell ns-cell-xsmall"><localize key="ns_status"></localize></div>
+                <div class="ns-table-cell"><localize key="ns_to"></localize></div>
+                <div class="ns-table-cell"><localize key="ns_subject"></localize></div>
+                <div class="ns-table-cell"><localize key="ns_sent"></localize></div>
+            </div>
+
+        </div>
+        <div class="ns-table-body">
+            <div class="ns-table-row ns-table-row-hover" ng-repeat="sub in vm.log.emails.page.items track by sub.trackingTransactionalId" ng-click="vm.openDetails(sub)">
+                <div class="ns-table-cell ns-cell-xsmall">
+                    <span class="ns-transactional-indicator">
+                        <span class="ns-transactional-indicator__{{sub.status}}"></span>
+                        <localize key="ns_transactional_status_{{sub.status}}"></localize>
+                    </span>
+                    
+                </div>
+                <div class="ns-table-cell">
+                    {{sub.to}}
+                </div>
+                <div class="ns-table-cell">
+                    {{sub.subject}}
+                </div>
+                <div class="ns-table-cell">
+                    {{sub.sentDate | date: 'shortDate' : 'UTC'}} {{sub.sentDate | date: 'mediumTime' : 'UTC'}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <umb-pagination page-number="vm.log.emails.page.currentPage"
+                    total-pages="vm.log.emails.page.totalPages"
+                    on-next="vm.nextPage"
+                    on-prev="vm.prevPage"
+                    on-go-to-page="vm.goToPage">
+    </umb-pagination>
+    
+
+</div>
