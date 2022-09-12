@@ -1,3 +1,6 @@
+using Umbraco.Cms.Core.Notifications;
+using UmbracoProject1.umbraco.Notifications;
+
 namespace UmbracoProject1
 {
     public class Startup
@@ -33,6 +36,9 @@ namespace UmbracoProject1
                 .AddBackOffice()
                 .AddWebsite()
                 .AddComposers()
+
+                //.AddNotificationHandler<ContentPublishingNotification, DontShout>()
+               // .AddDontShoutNotifications()
                 .Build();
         }
 
